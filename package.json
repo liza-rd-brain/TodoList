@@ -4,14 +4,19 @@
   "license": "MIT",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build"
+    "build": "parcel build",
+    "lint": "eslint",
+    "check": "tsc --noEmit"
   },
   "devDependencies": {
     "@parcel/transformer-less": "2.8.0",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.9",
     "parcel": "^2.8.0",
     "process": "^0.11.10"
   },
   "dependencies": {
+    "@parcel/validator-eslint": "^2.8.0",
     "dayjs": "^1.11.6",
     "firebase": "^9.14.0",
     "react": "^18.2.0",
