@@ -1,6 +1,9 @@
 import "./App.less";
+import dayjs from "dayjs";
 
 export function App() {
+  console.log(dayjs().day());
+
   return (
     <div className="App">
       <header className="App-header">

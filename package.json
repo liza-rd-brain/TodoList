@@ -1,6 +1,7 @@
 {
   "name": "todo",
   "source": "src/index.html",
+  "license": "MIT",
   "scripts": {
     "start": "parcel",
     "build": "parcel build"
@@ -11,6 +12,7 @@
     "process": "^0.11.10"
   },
   "dependencies": {
+    "dayjs": "^1.11.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }
