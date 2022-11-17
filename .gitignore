@@ -1,0 +1,15 @@
+
+
+# dependencies
+/node_modules
+
+# production
+build
+dist
+
+#other
+.parcel-cache
+
+#text
+Task.md
+ToDo.md
