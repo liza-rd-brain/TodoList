@@ -2,7 +2,7 @@ import React, { useReducer } from "react";
 import "./App.less";
 import dayjs from "dayjs";
 
-import { AppContext } from "./App.provider";
+import { AppContext } from "./AppProvider";
 
 import { useRef, useState, useEffect, useLayoutEffect, RefObject } from "react";
 import { db } from "./firebase";
@@ -20,7 +20,7 @@ import { ToDoList } from "./feature/ToDoList";
 import { initialState, reducer } from "./business/reducer";
 import { Preloader } from "./component/Preloader";
 import { createPortal } from "react-dom";
-import { Card } from "./component/Card";
+import { Task } from "./component/Task";
 
 const BUTTON_TEXT = "Add Task";
 
@@ -48,7 +48,7 @@ export function App() {
       }
       case "card": {
         const parentForCard = document.getElementById("test") as HTMLElement;
-        const cardPortal = createPortal(<Card />, parentForCard);
+        const cardPortal = createPortal(<Task />, parentForCard);
         /*      return cardPortal;
          */
         return (
@@ -99,7 +99,7 @@ export function App() {
   /* Закрыть модалку */
   // const closeModal = (e: MouseEvent) => {
   //   console.log("закрыть модалку");
-  //   const container = document.getElementById("cardContainer");
+  //   const container = document.getElementById("taskContainer");
   //   console.log("container", container, e?.target);
   //   if (e?.target !== container && state.view === "card") {
   //     dispatch({ type: "changeView" });

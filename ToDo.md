@@ -6,12 +6,11 @@
 
 
 * Logic:
-- [ ] TypeScript?!?!
+- [x] TypeScript?!?!
 # for thursday
-- [ ]simple crud
+- [ ] simple crud
 - [ ] Main Page: Header+List
-- [ ] Portal: add task
-- [ ] key as new Date()
+- [x] Portal: add task
 - [ ] заголовок, описание, дата завершения, прикрепленные файлы
 - [ ] how to store files
 
