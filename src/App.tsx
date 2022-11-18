@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useReducer } from "react";
 import "./App.less";
 import dayjs from "dayjs";
+
+import { AppContext } from "./App.provider";
 
 import { useRef, useState, useEffect, RefObject } from "react";
 import { db } from "./firebase";
@@ -15,15 +17,34 @@ import {
   DocumentData,
 } from "firebase/firestore";
 import { ToDoList } from "./feature/ToDoList";
+import { initialState, reducer } from "./business/reducer";
+import { Preloader } from "./component/Preloader";
 
 export function App() {
-  const initialState: { id: string; value: any }[] = [];
-  const [todoList, setTodoList] = useState(initialState);
-
-  console.log(todoList);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const textInput: any = useRef({ value: null });
 
+  const getView = () => {
+    switch (state.view) {
+      case "loading": {
+        return <Preloader />;
+      }
+      case "list": {
+        return (
+          <div className="todo-list">
+            <header className="App-header">TODO</header>
+            <input ref={textInput} type="text" defaultValue="" />
+            <button onClick={addData}> + </button>
+            <ToDoList list={state.data} />
+          </div>
+        );
+      }
+      case "card": {
+        return null;
+      }
+    }
+  };
   const addData = async () => {
     try {
       await addDoc(collection(db, "todo"), {
@@ -32,6 +53,7 @@ export function App() {
     } catch (err) {
       console.log(err);
     }
+
     textInput.current = null;
     console.log(textInput.current);
   };
@@ -39,21 +61,20 @@ export function App() {
   useEffect(() => {
     const q = query(collection(db, "todo"));
     onSnapshot(q, (querySnapshot) => {
-      setTodoList(
-        querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          value: doc.data(),
-        }))
-      );
+      const todoList = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        value: doc.data(),
+      }));
+
+      dispatch({ type: "loadTaskList", payload: todoList });
     });
-  }, [textInput.current]);
+  }, []);
 
   return (
-    <div className="app-container">
-      <header className="App-header">TODO</header>
-      <input ref={textInput} type="text" value={undefined} />
-      <button onClick={addData}> + </button>
-      <ToDoList list={todoList} />
-    </div>
+    <AppContext.Provider value={{ state, dispatch }}>
+      <div className="app-container">{getView()}</div>
+
+      {/*        */}
+    </AppContext.Provider>
   );
 }

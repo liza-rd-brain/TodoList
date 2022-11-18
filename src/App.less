@@ -1,7 +1,7 @@
 @app-primary: #dce1e7;
 @app-secondary: gold;
 
-.App {
+.app {
   text-align: center;
   background-color: #d3d3d34d;
 }
@@ -10,6 +10,10 @@
   width: 900px;
   margin: auto;
   background-color: #d3d3d34d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh
 }
 
 .App-logo {
@@ -32,6 +36,12 @@
 .App-text {
   color: @app-secondary;
 }
+
+.todo-list{
+  display: flex;
+  flex-direction: column;
+}
+
 
 @keyframes App-logo-spin {
   from {
