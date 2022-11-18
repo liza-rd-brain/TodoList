@@ -7,7 +7,8 @@
 
 * Logic:
 - [ ] TypeScript?!?!
-# for hursday
+# for thursday
+- [ ]simple crud
 - [ ] Main Page: Header+List
 - [ ] Portal: add task
 - [ ] key as new Date()
