@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 
 import { AppContext } from "./App.provider";
 
-import { useRef, useState, useEffect, RefObject } from "react";
+import { useRef, useState, useEffect, useLayoutEffect, RefObject } from "react";
 import { db } from "./firebase";
 
 import {
@@ -19,6 +19,10 @@ import {
 import { ToDoList } from "./feature/ToDoList";
 import { initialState, reducer } from "./business/reducer";
 import { Preloader } from "./component/Preloader";
+import { createPortal } from "react-dom";
+import { Card } from "./component/Card";
+
+const BUTTON_TEXT = "Add Task";
 
 export function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -32,19 +36,36 @@ export function App() {
       }
       case "list": {
         return (
-          <div className="todo-list">
-            <header className="App-header">TODO</header>
-            <input ref={textInput} type="text" defaultValue="" />
-            <button onClick={addData}> + </button>
+          <div className="todo-list" id="test">
+            <div className="app-logo">TODO</div>
+            {/*     <input ref={textInput} type="text" defaultValue="" /> */}
+            <button className="app-create-task" onClick={(e) => createTask(e)}>
+              {BUTTON_TEXT}
+            </button>
             <ToDoList list={state.data} />
           </div>
         );
       }
       case "card": {
-        return null;
+        const parentForCard = document.getElementById("test") as HTMLElement;
+        const cardPortal = createPortal(<Card />, parentForCard);
+        /*      return cardPortal;
+         */
+        return (
+          <div className="todo-list">
+            <div className="app-logo">TODO</div>
+            {/*     <input ref={textInput} type="text" defaultValue="" /> */}
+            <button className="app-create-task" onClick={(e) => createTask(e)}>
+              {BUTTON_TEXT}
+            </button>
+            {cardPortal}
+            <ToDoList list={state.data} />
+          </div>
+        );
       }
     }
   };
+
   const addData = async () => {
     try {
       await addDoc(collection(db, "todo"), {
@@ -54,8 +75,13 @@ export function App() {
       console.log(err);
     }
 
-    textInput.current = null;
     console.log(textInput.current);
+  };
+
+  const createTask = (e: any) => {
+    e.stopPropagation();
+    console.log("открыть модалку");
+    dispatch({ type: "changeView" });
   };
 
   useEffect(() => {
@@ -70,9 +96,37 @@ export function App() {
     });
   }, []);
 
+  /* Закрыть модалку */
+  // const closeModal = (e: MouseEvent) => {
+  //   console.log("закрыть модалку");
+  //   const container = document.getElementById("cardContainer");
+  //   console.log("container", container, e?.target);
+  //   if (e?.target !== container && state.view === "card") {
+  //     dispatch({ type: "changeView" });
+  //   }
+  // };
+
+  // document.addEventListener("click", closeModal);
+
+  // useEffect(() => {
+  //   if (state.view === "card") {
+  //     console.log("подписка");
+  //     document.addEventListener("click", closeModal);
+  //     /*     return document.removeEventListener("click", closeModal); */
+  //   }
+  // }, [state.view]);
+
   return (
     <AppContext.Provider value={{ state, dispatch }}>
-      <div className="app-container">{getView()}</div>
+      <div
+        className={
+          state.view == "card"
+            ? "app-container app-container-blur"
+            : " app-container "
+        }
+      >
+        {getView()}
+      </div>
 
       {/*        */}
     </AppContext.Provider>

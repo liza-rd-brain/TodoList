@@ -19,6 +19,16 @@ export const reducer = (
       return newState;
     }
 
+    case "changeView": {
+      const newView = state.view === "card" ? "list" : "card";
+      const newState: State = {
+        ...state,
+        view: newView,
+      };
+
+      return newState;
+    }
+
     case "editTask": {
       return state;
     }

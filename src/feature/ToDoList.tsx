@@ -11,7 +11,6 @@ export const ToDoList = ({ list }) => {
   return (
     <div>
       {list.map((item, index) => {
-        console.log(item.value, index);
         return <ToDoItem key={index} item={item.value.name} />;
       })}
     </div>

@@ -8,4 +8,5 @@ export type ActionType =
   | { type: "editTask" }
   | { type: "deleteTask" }
   | { type: "saveTask" }
-  | { type: "checkDone" };
+  | { type: "checkDone" }
+  | { type: "changeView" };
