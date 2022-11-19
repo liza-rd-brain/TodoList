@@ -1,21 +1,33 @@
 
 * Style:
 - [ ] Buttons edit,delete, add, file, calendar
-- [ ] Choose palet
+- [ ] add template for empty list
+- [ ] Choose palete
+
 
 
 
 * Logic:
 - [x] TypeScript?!?!
-# for thursday
+# priority
+
+- [ ] required fields?! name?
+- [ ] how to store files
+- [ ] One preloader  or progressBar for loading data
 - [ ] simple crud
 - [ ] Main Page: Header+List
-- [x] Portal: add task
-- [ ] заголовок, описание, дата завершения, прикрепленные файлы
-- [ ] how to store files
-
-# for friday
 - [ ] work with date - dayjs, mark as done\expired
+- [ ] how to check isExpired
+- [ ] taskPreview in taskList
+- [ ] Done,delete to task
+
+
+
+- [x] Portal: add task
+- [x] заголовок, описание, дата завершения, прикрепленные файлы
+
+# other
+- [ ]separate preloader
 
 
 

@@ -85,15 +85,17 @@ export function App() {
   };
 
   useEffect(() => {
-    const q = query(collection(db, "todo"));
-    onSnapshot(q, (querySnapshot) => {
-      const todoList = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        value: doc.data(),
-      }));
+    if (state.view === "loading") {
+      const q = query(collection(db, "todo"));
+      onSnapshot(q, (querySnapshot) => {
+        const todoList = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          value: doc.data(),
+        }));
 
-      dispatch({ type: "loadTaskList", payload: todoList });
-    });
+        dispatch({ type: "loadedTaskList", payload: todoList });
+      });
+    }
   }, []);
 
   /* Закрыть модалку */

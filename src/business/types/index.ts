@@ -4,7 +4,7 @@ export type State = {
 };
 
 export type ActionType =
-  | { type: "loadTaskList"; payload: any }
+  | { type: "loadedTaskList"; payload: any }
   | { type: "editTask" }
   | { type: "deleteTask" }
   | { type: "saveTask" }

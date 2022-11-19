@@ -10,7 +10,7 @@ export const reducer = (
   action: ActionType
 ): State => {
   switch (action.type) {
-    case "loadTaskList": {
+    case "loadedTaskList": {
       const newState: State = {
         ...state,
         data: action.payload,
