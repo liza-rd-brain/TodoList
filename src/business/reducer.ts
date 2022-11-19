@@ -4,48 +4,59 @@ export const initialState: State = {
   data: null,
   view: "loading",
   doEffect: { type: "!loadFireBase" },
+  phase: { type: "waitingTaskList" },
 };
 
 export const reducer = (
   state: State = initialState,
   action: ActionType
 ): State => {
-  switch (action.type) {
-    case "loadedTaskList": {
-      const newState: State = {
-        ...state,
-        data: action.payload,
-        view: "list",
-      };
-      return newState;
+  const phase = state.phase.type;
+
+  switch (phase) {
+    case "idle": {
+      switch (action.type) {
+        case "changeView": {
+          const newView = state.view === "card" ? "list" : "card";
+          const newState: State = {
+            ...state,
+            view: newView,
+          };
+
+          return newState;
+        }
+      }
     }
 
-    case "changeView": {
-      const newView = state.view === "card" ? "list" : "card";
-      const newState: State = {
-        ...state,
-        view: newView,
-      };
+    default: {
+      switch (action.type) {
+        case "loadedTaskList": {
+          const newState: State = {
+            ...state,
+            data: action.payload,
+            view: "list",
+          };
+          return newState;
+        }
 
-      return newState;
-    }
+        case "editTask": {
+          return state;
+        }
 
-    case "editTask": {
-      return state;
-    }
+        case "deleteTask": {
+          return state;
+        }
 
-    case "deleteTask": {
-      return state;
-    }
+        case "saveTask": {
+          return state;
+        }
+        case "checkDone": {
+          return state;
+        }
 
-    case "saveTask": {
-      return state;
+        default:
+          return state;
+      }
     }
-    case "checkDone": {
-      return state;
-    }
-
-    default:
-      return state;
   }
 };

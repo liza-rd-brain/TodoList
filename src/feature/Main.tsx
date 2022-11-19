@@ -1,16 +1,16 @@
 import React, { useReducer } from "react";
 import "./App.less";
 
-import { useAppContext } from "./AppProvider";
+import { useAppContext } from "../AppProvider";
 
 import { useRef } from "react";
-
-import { ToDoList } from "./feature/ToDoList";
-import { initialState, reducer } from "./business/reducer";
-import { Preloader } from "./component/Preloader";
 import { createPortal } from "react-dom";
-import { Task } from "./component/Task";
-import { useFireBase } from "./effect";
+
+import { ToDoList } from "./ToDoList";
+import { initialState, reducer } from "../business/reducer";
+import { Preloader } from "../component/Preloader";
+import { Task } from "../component/Task";
+import { useFireBase } from "../effect";
 
 const BUTTON_TEXT = "Add Task";
 

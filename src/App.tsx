@@ -5,7 +5,7 @@ import { AppContext } from "./AppProvider";
 
 import { initialState, reducer } from "./business/reducer";
 
-import { Main } from "./Main";
+import { Main } from "./feature/Main";
 
 export function App() {
   const [state, dispatch] = useReducer(reducer, initialState);

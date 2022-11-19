@@ -12,7 +12,7 @@
 # priority
 
 - [ ] required fields?! name?
-- [ ] how to store files
+- [x] how to store files
 - [ ] One preloader  or progressBar for loading data
 - [ ] simple crud
 - [ ] Main Page: Header+List
