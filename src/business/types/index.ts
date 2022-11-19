@@ -1,7 +1,9 @@
 export type State = {
   data: any;
   view: "list" | "card" | "loading";
+  doEffect: EffectType;
 };
+export type EffectType = { type: "!loadFireBase" };
 
 export type ActionType =
   | { type: "loadedTaskList"; payload: any }

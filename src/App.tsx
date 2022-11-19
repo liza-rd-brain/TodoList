@@ -21,6 +21,7 @@ import { initialState, reducer } from "./business/reducer";
 import { Preloader } from "./component/Preloader";
 import { createPortal } from "react-dom";
 import { Task } from "./component/Task";
+import { useFireBase } from "./effect";
 
 const BUTTON_TEXT = "Add Task";
 
@@ -84,20 +85,6 @@ export function App() {
     dispatch({ type: "changeView" });
   };
 
-  useEffect(() => {
-    if (state.view === "loading") {
-      const q = query(collection(db, "todo"));
-      onSnapshot(q, (querySnapshot) => {
-        const todoList = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          value: doc.data(),
-        }));
-
-        dispatch({ type: "loadedTaskList", payload: todoList });
-      });
-    }
-  }, []);
-
   /* Закрыть модалку */
   // const closeModal = (e: MouseEvent) => {
   //   console.log("закрыть модалку");
@@ -117,6 +104,8 @@ export function App() {
   //     /*     return document.removeEventListener("click", closeModal); */
   //   }
   // }, [state.view]);
+
+  useFireBase();
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>
