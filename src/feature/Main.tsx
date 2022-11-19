@@ -1,5 +1,4 @@
 import React, { useReducer } from "react";
-import "./App.less";
 
 import { useAppContext } from "../AppProvider";
 
@@ -10,12 +9,14 @@ import { ToDoList } from "./ToDoList";
 import { initialState, reducer } from "../business/reducer";
 import { Preloader } from "../component/Preloader";
 import { Task } from "../component/Task";
-import { useFireBase } from "../effect";
+import { useFireBase } from "../business/effect";
 
 const BUTTON_TEXT = "Add Task";
 
 export function Main() {
   const { state, dispatch } = useAppContext();
+
+  console.log("state", state);
 
   const getView = () => {
     switch (state.view) {
@@ -24,7 +25,7 @@ export function Main() {
       }
       case "list": {
         return (
-          <div className="todo-list" id="test">
+          <div className="todo-list" id="listTask">
             <div className="app-logo">TODO</div>
             {/*     <input ref={textInput} type="text" defaultValue="" /> */}
             <button className="app-create-task" onClick={(e) => createTask(e)}>
@@ -35,12 +36,14 @@ export function Main() {
         );
       }
       case "card": {
-        const parentForCard = document.getElementById("test") as HTMLElement;
+        const parentForCard = document.getElementById(
+          "listTask"
+        ) as HTMLElement;
         const cardPortal = createPortal(<Task />, parentForCard);
         /*      return cardPortal;
          */
         return (
-          <div className="todo-list">
+          <div className="todo-list" id="listTask">
             <div className="app-logo">TODO</div>
             {/*     <input ref={textInput} type="text" defaultValue="" /> */}
             <button className="app-create-task" onClick={(e) => createTask(e)}>

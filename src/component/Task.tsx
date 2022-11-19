@@ -5,13 +5,6 @@ import { useAppContext } from "../AppProvider";
 import { db, storage } from "../firebase";
 import { collection, addDoc } from "firebase/firestore";
 
-import {
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-  UploadTask,
-} from "firebase/storage";
-
 export const Task = () => {
   const { state, dispatch } = useAppContext();
 
@@ -19,7 +12,7 @@ export const Task = () => {
    * В fileList можно добавить сразу несколько файлов
    * Добавление новых не перезаписывает старые
    */
-  const fileList = useRef<Array<any>>([]);
+  /*   const fileList = useRef<Array<any>>([]); */
   const textInput = useRef<HTMLInputElement>(null);
   const textArea = useRef<HTMLTextAreaElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -32,52 +25,8 @@ export const Task = () => {
     return Object.values(fileObj);
   };
 
-  const addFiles = async () => {
-    const newFileList = getFileList(fileInput.current?.files as FileList);
-    console.log("newFileList", newFileList);
-
-    try {
-      let result = Promise.all(
-        newFileList.map((item) => {
-          return new Promise((resolve, reject) => {
-            const storageRef = ref(storage, `files/${item.name}`);
-            const uploadTask = uploadBytesResumable(storageRef, item);
-
-            uploadTask.on(
-              "state_changed",
-              (snapshot) => {
-                const progress =
-                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log("Upload is " + progress + "% done");
-                switch (snapshot.state) {
-                  case "paused":
-                    console.log("Upload is paused");
-
-                  case "running":
-                    console.log("Upload is running");
-                }
-              },
-              reject,
-              () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                  console.log("File available at", downloadURL);
-                  resolve(downloadURL);
-                });
-              }
-            );
-          });
-        })
-      );
-
-      result.then((res) => {
-        console.log("all  promise done");
-        console.log("res", res);
-        fileList.current = [...fileList.current, ...res];
-        console.log("fileList.current ", fileList.current);
-      });
-    } catch (err) {
-      console.log(err);
-    }
+  const addFiles = () => {
+    dispatch({ type: "startedAddFile", payload: fileInput.current?.files });
   };
 
   const addData = async () => {
@@ -85,7 +34,7 @@ export const Task = () => {
       addDoc(collection(db, "todo"), {
         name: textInput.current?.value,
         desc: textArea.current?.value,
-        fileList: fileList.current,
+        fileList: state.currTask?.fileList,
       });
     } catch (err) {
       console.log(err);
@@ -93,6 +42,7 @@ export const Task = () => {
 
     console.log(textInput.current);
   };
+
   /*   React.MutableRefObject<HTMLDivElement | undefined> */
   return (
     <div className="task-container" id="taskContainer">
@@ -127,15 +77,7 @@ export const Task = () => {
         </div>
         <div className="content-row">
           <div>прикрепленные файлы</div>
-          <input
-            ref={fileInput}
-            type="file"
-            multiple
-            onChange={(e) => {
-              console.log("добавила файлы", e.target);
-              addFiles();
-            }}
-          />
+          <input ref={fileInput} type="file" multiple onChange={addFiles} />
         </div>
       </div>
       <div className="bottom-panel">
