@@ -1,22 +1,28 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import "./Task.less";
 import { useAppContext } from "../AppProvider";
 
 import { db, storage } from "../firebase";
 import { collection, addDoc } from "firebase/firestore";
 
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import {
+  ref,
+  getDownloadURL,
+  uploadBytesResumable,
+  UploadTask,
+} from "firebase/storage";
 
 export const Task = () => {
   const { state, dispatch } = useAppContext();
 
+  /**
+   * В fileList можно добавить сразу несколько файлов
+   * Добавление новых не перезаписывает старые
+   */
+  const fileList = useRef<Array<any>>([]);
   const textInput = useRef<HTMLInputElement>(null);
   const textArea = useRef<HTMLTextAreaElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
-
-  let fileListTest: Array<any> = [];
-
-  console.log(textInput.current);
 
   const closeModal = () => {
     dispatch({ type: "changeView" });
@@ -29,43 +35,49 @@ export const Task = () => {
   const addFiles = async () => {
     const newFileList = getFileList(fileInput.current?.files as FileList);
     console.log("newFileList", newFileList);
-    //TODO:добавлять id для загрузки файлов!???
 
-    newFileList.map((item) => {
-      if (item) {
-        const storageRef = ref(storage, `files/${item.name}`);
+    try {
+      let result = Promise.all(
+        newFileList.map((item) => {
+          return new Promise((resolve, reject) => {
+            const storageRef = ref(storage, `files/${item.name}`);
+            const uploadTask = uploadBytesResumable(storageRef, item);
 
-        // const uploadTask = uploadBytesResumable(storageRef, item);
+            uploadTask.on(
+              "state_changed",
+              (snapshot) => {
+                const progress =
+                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log("Upload is " + progress + "% done");
+                switch (snapshot.state) {
+                  case "paused":
+                    console.log("Upload is paused");
 
-        // uploadTask.on(
-        //   "state_changed",
-        //   (snapshot) => {
-        //     // Observe state change events such as progress, pause, and resume
-        //     // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        //     const progress =
-        //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        //     console.log("Upload is " + progress + "% done");
-        //     switch (snapshot.state) {
-        //       case "paused":
-        //         console.log("Upload is paused");
+                  case "running":
+                    console.log("Upload is running");
+                }
+              },
+              reject,
+              () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                  console.log("File available at", downloadURL);
+                  resolve(downloadURL);
+                });
+              }
+            );
+          });
+        })
+      );
 
-        //       case "running":
-        //         console.log("Upload is running");
-        //     }
-        //   },
-        //   (error) => {
-        //     console.log(error);
-        //   },
-        //   () => {
-        //     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        //       fileListTest.push(downloadURL);
-        //       console.log("File available at", downloadURL);
-        //     });
-        //     return;
-        //   }
-        // );
-      }
-    });
+      result.then((res) => {
+        console.log("all  promise done");
+        console.log("res", res);
+        fileList.current = [...fileList.current, ...res];
+        console.log("fileList.current ", fileList.current);
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const addData = async () => {
@@ -73,7 +85,7 @@ export const Task = () => {
       addDoc(collection(db, "todo"), {
         name: textInput.current?.value,
         desc: textArea.current?.value,
-        fileList: fileListTest,
+        fileList: fileList.current,
       });
     } catch (err) {
       console.log(err);
