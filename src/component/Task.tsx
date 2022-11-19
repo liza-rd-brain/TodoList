@@ -4,6 +4,20 @@ import { useAppContext } from "../AppProvider";
 
 import { db, storage } from "../firebase";
 import { collection, addDoc } from "firebase/firestore";
+import { State } from "../business/types";
+
+const getFileList = (state: State) => {
+  const fileItemList = state.currTask?.fileList;
+  if (fileItemList) {
+    return fileItemList.map((item) => {
+      return (
+        <div>
+          <a href={item}>test</a>
+        </div>
+      );
+    });
+  } else return null;
+};
 
 export const Task = () => {
   const { state, dispatch } = useAppContext();
@@ -19,10 +33,6 @@ export const Task = () => {
 
   const closeModal = () => {
     dispatch({ type: "changeView" });
-  };
-
-  const getFileList = (fileObj: FileList) => {
-    return Object.values(fileObj);
   };
 
   const addFiles = () => {
@@ -78,6 +88,7 @@ export const Task = () => {
         <div className="content-row">
           <div>прикрепленные файлы</div>
           <input ref={fileInput} type="file" multiple onChange={addFiles} />
+          <div className="fileList">{getFileList(state)}</div>
         </div>
       </div>
       <div className="bottom-panel">

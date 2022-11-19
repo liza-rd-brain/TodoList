@@ -52,6 +52,14 @@ export const reducer = (
           return newState;
         }
 
+        case "changeView": {
+          return changeView(state);
+        }
+      }
+    }
+
+    case "fileAdding": {
+      switch (action.type) {
         case "endedAddFile": {
           const newState: State = {
             ...state,
@@ -62,10 +70,6 @@ export const reducer = (
             phase: { type: "cardCreating" },
           };
           return newState;
-        }
-
-        case "changeView": {
-          return changeView(state);
         }
       }
     }
