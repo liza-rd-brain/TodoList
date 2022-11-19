@@ -3,6 +3,7 @@ import { ActionType, State } from "./types";
 export const initialState: State = {
   data: null,
   view: "loading",
+  doEffect: { type: "!loadFireBase" },
 };
 
 export const reducer = (

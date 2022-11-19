@@ -30,38 +30,40 @@ export const Task = () => {
     const newFileList = getFileList(fileInput.current?.files as FileList);
     console.log("newFileList", newFileList);
     //TODO:добавлять id для загрузки файлов!???
+
     newFileList.map((item) => {
       if (item) {
         const storageRef = ref(storage, `files/${item.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, item);
 
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            // Observe state change events such as progress, pause, and resume
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Upload is " + progress + "% done");
-            switch (snapshot.state) {
-              case "paused":
-                console.log("Upload is paused");
+        // const uploadTask = uploadBytesResumable(storageRef, item);
 
-              case "running":
-                console.log("Upload is running");
-            }
-          },
-          (error) => {
-            console.log(error);
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              fileListTest.push(downloadURL);
-              console.log("File available at", downloadURL);
-            });
-            return;
-          }
-        );
+        // uploadTask.on(
+        //   "state_changed",
+        //   (snapshot) => {
+        //     // Observe state change events such as progress, pause, and resume
+        //     // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        //     const progress =
+        //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        //     console.log("Upload is " + progress + "% done");
+        //     switch (snapshot.state) {
+        //       case "paused":
+        //         console.log("Upload is paused");
+
+        //       case "running":
+        //         console.log("Upload is running");
+        //     }
+        //   },
+        //   (error) => {
+        //     console.log(error);
+        //   },
+        //   () => {
+        //     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        //       fileListTest.push(downloadURL);
+        //       console.log("File available at", downloadURL);
+        //     });
+        //     return;
+        //   }
+        // );
       }
     });
   };

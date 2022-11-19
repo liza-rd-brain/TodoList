@@ -18,7 +18,7 @@ export function useFireBase() {
   } = useAppContext();
 
   useEffect(() => {
-    if (doEffect.type === "!loadFireBase") {
+    if (doEffect?.type === "!loadFireBase") {
       const q = query(collection(db, "todo"));
       onSnapshot(q, (querySnapshot) => {
         const todoList = querySnapshot.docs.map((doc) => ({
