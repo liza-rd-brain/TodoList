@@ -9,9 +9,9 @@ import { State } from "../business/types";
 const getFileList = (state: State) => {
   const fileItemList = state.currTask?.fileList;
   if (fileItemList) {
-    return fileItemList.map((item) => {
+    return fileItemList.map((item, index) => {
       return (
-        <div>
+        <div key={index}>
           <a href={item}>test</a>
         </div>
       );

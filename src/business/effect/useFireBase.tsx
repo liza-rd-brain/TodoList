@@ -8,6 +8,7 @@ import {
   getDownloadURL,
   uploadBytesResumable,
   UploadTask,
+  uploadBytes,
 } from "firebase/storage";
 
 export function useFireBase() {
@@ -45,46 +46,34 @@ export function useFireBase() {
                   const storageRef = ref(storage, `files/${item.name}`);
                   const uploadTask = uploadBytesResumable(storageRef, item);
 
-                  uploadTask.on(
-                    "state_changed",
-                    (snapshot) => {
-                      const progress =
-                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                      console.log("Upload is " + progress + "% done");
-                      switch (snapshot.state) {
-                        case "paused":
-                          console.log("Upload is paused");
+                  uploadBytes(storageRef, item).then((snapshot) => {
+                    console.log("Uploaded a blob or file!");
+                    getDownloadURL(uploadTask.snapshot.ref).then(
+                      (downloadURL) => {
+                        console.log("File available at", downloadURL);
 
-                        case "running":
-                          console.log("Upload is running");
+                        console.log("downloadURL", downloadURL);
+                        resolve(downloadURL);
                       }
-                    },
-                    reject,
-                    () => {
-                      getDownloadURL(uploadTask.snapshot.ref).then(
-                        (downloadURL) => {
-                          console.log("File available at", downloadURL);
-
-                          console.log("downloadURL", downloadURL);
-                          resolve(downloadURL);
-                        }
-                      );
-                    }
-                  );
+                    );
+                  });
                 });
               })
             );
 
-            result.then((res: Array<string>) => {
-              console.log("all  promise done");
-              console.log("res", res);
-              fileList.push(...res);
-              console.log("newFileList", fileList);
-              dispatch({
-                type: "endedAddFile",
-                payload: fileList,
-              });
-            });
+            result.then(
+              (res: Array<string>) => {
+                fileList.push(...res);
+
+                dispatch({
+                  type: "endedAddFile",
+                  payload: fileList,
+                });
+              },
+              (err) => {
+                console.log(err);
+              }
+            );
           } catch (err) {
             console.log(err);
           }
