@@ -10,7 +10,7 @@ import {
   UploadTask,
   uploadBytes,
 } from "firebase/storage";
-import { FileItemList, FileItemType } from "../types";
+import { DataValueType, FileItemList, FileItemType } from "../types";
 
 export function useFireBase() {
   const {
@@ -26,7 +26,7 @@ export function useFireBase() {
         onSnapshot(q, (querySnapshot) => {
           const todoList = querySnapshot.docs.map((doc) => ({
             id: doc.id,
-            value: doc.data(),
+            value: doc.data() as DataValueType,
           }));
 
           dispatch({ type: "loadedTaskList", payload: todoList });
@@ -34,7 +34,8 @@ export function useFireBase() {
       }
 
       case "!loadFile": {
-        let fileList: FileItemList = currTask ? [...currTask.fileList] : [];
+        const prevFileList = currTask?.value?.fileList as FileItemList;
+        let fileList: FileItemList = currTask ? [...prevFileList] : [];
 
         const data = doEffect.type === "!loadFile" ? doEffect.data : null;
         if (data) {
