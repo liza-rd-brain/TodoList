@@ -43,6 +43,7 @@ export type EffectType =
 export type PhaseType =
   | { type: "waitingTaskList" }
   | { type: "cardCreating" }
+  | { type: "cardEditing" }
   | { type: "fileAdding" }
   | { type: "idle" };
 

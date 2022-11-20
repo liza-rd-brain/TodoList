@@ -49,7 +49,7 @@ export const reducer = (
           const newState: State = {
             ...state,
             view: "card",
-            phase: { type: "cardCreating" },
+            phase: { type: "cardEditing" },
             currTask: newCurrTask,
           };
           return newState;

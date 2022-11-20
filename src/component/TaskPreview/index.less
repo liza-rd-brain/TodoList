@@ -1,18 +1,38 @@
+
+
 .preview-container {
+    display: flex;
+    flex-direction: column;
     width: 500px;
     height: 100px;
     background-color: #fffdfd7d;
     border-radius: 10px;
     padding: 15px;
     cursor: pointer;
+    text-align: start;
+    // gap:5px;
 
     &:hover {
         box-shadow: 0px 0px 5px 1px #c4c4c4fa;
     }
 }
 
-.preview-title {}
+.preview-title {
+    font-weight: 500;
+    font-size: 18px;
+    &::first-letter {
+        text-transform: uppercase;
+    }
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
-.preview-description {}
+.preview-description {
+    color:gray;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 .preview-date {}
