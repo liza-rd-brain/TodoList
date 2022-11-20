@@ -83,6 +83,7 @@ export function useFireBase() {
 
       case "!saveTask": {
         const data = doEffect.type === "!saveTask" ? doEffect.data : null;
+
         try {
           addDoc(collection(db, "todo"), data);
         } catch (err) {

@@ -1,9 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import "./index.less";
 import { useAppContext } from "../../AppProvider";
 
-import { db, storage } from "../../firebase";
-import { collection, addDoc } from "firebase/firestore";
 import { FileItemList, State } from "../../business/types";
 import { Preloader } from "../Preloader";
 
@@ -49,13 +47,21 @@ export const Task = () => {
 
   //TODO: fix assertion
   const saveTask = async () => {
+    const payloadCore = {
+      name: textInput.current?.value as string,
+      desc: textArea.current?.value as string,
+    };
+    const payloadWithFile = {
+      fileList: state.currTask?.fileList as FileItemList,
+    };
+
+    const newPayload = state.currTask?.fileList
+      ? Object.assign(payloadCore, payloadWithFile)
+      : payloadCore;
+
     dispatch({
       type: "startedSaveTask",
-      payload: {
-        name: textInput.current?.value as string,
-        desc: textArea.current?.value as string,
-        fileList: state.currTask?.fileList as FileItemList,
-      },
+      payload: newPayload,
     });
 
     console.log(textInput.current);

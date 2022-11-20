@@ -18,7 +18,7 @@ export type DataType = {
 export type DataValueType = {
   name: string;
   desc: string;
-  fileList: FileItemList;
+  fileList?: FileItemList;
 };
 
 export type FileItemList = Array<FileItemType>;
