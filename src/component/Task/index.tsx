@@ -7,6 +7,11 @@ import { collection, addDoc } from "firebase/firestore";
 import { State } from "../../business/types";
 import { Preloader } from "../Preloader";
 
+const NAME_TASK_TEXT = "заголовок";
+const DESC_TASK_TEXT = "описание";
+const DATE_TASK_TEXT = "дата завершения";
+const FILE_TASK_TEXT = "прикрепленные файлы";
+
 const getFileList = (state: State) => {
   const fileItemList = state.currTask?.fileList;
   if (fileItemList) {
@@ -63,7 +68,7 @@ export const Task = () => {
       </div>
       <div className="task-content">
         <div className="content-row">
-          <div>заголовок</div>
+          <div className="task-caption">{NAME_TASK_TEXT}</div>
           <input
             required={true}
             ref={textInput}
@@ -73,7 +78,7 @@ export const Task = () => {
           />
         </div>
         <div className="content-row">
-          <div>описание</div>
+          <div className="task-caption">{DESC_TASK_TEXT}</div>
           <textarea
             ref={textArea}
             className="task-textarea"
@@ -84,27 +89,30 @@ export const Task = () => {
           ></textarea>
         </div>
         <div className="content-row">
-          <div>дата завершения</div>
+          <div className="task-caption">{DATE_TASK_TEXT}</div>
           <div>{"добавить дату завершения"}</div>
         </div>
+
         <div className="content-row">
-          <div>прикрепленные файлы</div>
-          <label className="input-file">
-            <input
-              ref={fileInput}
-              type="file"
-              multiple
-              onChange={addFiles}
-              className="input-file"
-            />
-            <span>
-              {state.phase.type === "fileAdding" ? (
-                <Preloader type="small" />
-              ) : (
-                "выберите файл"
-              )}
-            </span>
-          </label>
+          <div className="caption-wrap">
+            <div className="task-caption">{FILE_TASK_TEXT}</div>
+            <label className="input-file">
+              <input
+                ref={fileInput}
+                type="file"
+                multiple
+                onChange={addFiles}
+                className="input-file"
+              />
+              <span>
+                {state.phase.type === "fileAdding" ? (
+                  <Preloader type="small" />
+                ) : (
+                  "выберите файл"
+                )}
+              </span>
+            </label>
+          </div>
 
           <div className="fileList">{getFileList(state)}</div>
         </div>
