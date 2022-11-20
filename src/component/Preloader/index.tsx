@@ -1,5 +1,5 @@
 import React from "react";
-import "./Preloader.less";
+import "./index.less";
 
 export const Preloader = () => {
   return <div className="preloader"></div>;

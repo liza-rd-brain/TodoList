@@ -1,10 +1,11 @@
 import React, { useRef, useState } from "react";
-import "./Task.less";
-import { useAppContext } from "../AppProvider";
+import "./index.less";
+import { useAppContext } from "../../AppProvider";
 
-import { db, storage } from "../firebase";
+import { db, storage } from "../../firebase";
 import { collection, addDoc } from "firebase/firestore";
-import { State } from "../business/types";
+import { State } from "../../business/types";
+import { Preloader } from "../Preloader";
 
 const getFileList = (state: State) => {
   const fileItemList = state.currTask?.fileList;
@@ -86,7 +87,17 @@ export const Task = () => {
         </div>
         <div className="content-row">
           <div>прикрепленные файлы</div>
-          <input ref={fileInput} type="file" multiple onChange={addFiles} />
+          <label className="input-file">
+            <input
+              ref={fileInput}
+              type="file"
+              multiple
+              onChange={addFiles}
+              className="input-file"
+            />
+            <span>Выберите файл</span>
+          </label>
+
           <div className="fileList">{getFileList(state)}</div>
         </div>
       </div>

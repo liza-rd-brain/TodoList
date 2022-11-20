@@ -27,7 +27,6 @@ export function Main() {
         return (
           <div className="todo-list" id="listTask">
             <div className="app-logo">TODO</div>
-            {/*     <input ref={textInput} type="text" defaultValue="" /> */}
             <button className="app-create-task" onClick={(e) => createTask(e)}>
               {BUTTON_TEXT}
             </button>
@@ -40,12 +39,10 @@ export function Main() {
           "listTask"
         ) as HTMLElement;
         const cardPortal = createPortal(<Task />, parentForCard);
-        /*      return cardPortal;
-         */
+
         return (
           <div className="todo-list" id="listTask">
             <div className="app-logo">TODO</div>
-            {/*     <input ref={textInput} type="text" defaultValue="" /> */}
             <button className="app-create-task" onClick={(e) => createTask(e)}>
               {BUTTON_TEXT}
             </button>
@@ -57,7 +54,7 @@ export function Main() {
     }
   };
 
-  const createTask = (e: Event) => {
+  const createTask = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.stopPropagation();
     console.log("открыть модалку");
     dispatch({ type: "changeView" });
