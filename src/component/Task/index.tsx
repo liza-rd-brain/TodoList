@@ -4,7 +4,7 @@ import { useAppContext } from "../../AppProvider";
 
 import { db, storage } from "../../firebase";
 import { collection, addDoc } from "firebase/firestore";
-import { State } from "../../business/types";
+import { FileItemList, State } from "../../business/types";
 import { Preloader } from "../Preloader";
 
 const NAME_TASK_TEXT = "заголовок";
@@ -47,16 +47,26 @@ export const Task = () => {
     dispatch({ type: "startedAddFile", payload: fileInput.current?.files });
   };
 
-  const addData = async () => {
-    try {
-      addDoc(collection(db, "todo"), {
-        name: textInput.current?.value,
-        desc: textArea.current?.value,
-        fileList: state.currTask?.fileList,
-      });
-    } catch (err) {
-      console.log(err);
-    }
+  //TODO: fix assertion
+  const saveTask = async () => {
+    dispatch({
+      type: "startedSaveTask",
+      payload: {
+        name: textInput.current?.value as string,
+        desc: textArea.current?.value as string,
+        fileList: state.currTask?.fileList as FileItemList,
+      },
+    });
+
+    // try {
+    //   addDoc(collection(db, "todo"), {
+    //     name: textInput.current?.value,
+    //     desc: textArea.current?.value,
+    //     fileList: state.currTask?.fileList,
+    //   });
+    // } catch (err) {
+    //   console.log(err);
+    // }
 
     console.log(textInput.current);
   };
@@ -124,7 +134,7 @@ export const Task = () => {
         >
           delete
         </button>
-        <button className="control-button button-save" onClick={addData}>
+        <button className="control-button button-save" onClick={saveTask}>
           save
         </button>
       </div>

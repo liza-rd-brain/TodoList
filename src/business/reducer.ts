@@ -53,6 +53,23 @@ export const reducer = (
           return newState;
         }
 
+        case "startedSaveTask": {
+          const newState: State = {
+            ...state,
+            doEffect: { type: "!saveTask", data: action.payload },
+          };
+          return newState;
+        }
+        case "endedAddFile": {
+          const newState: State = {
+            ...state,
+            doEffect: null,
+            view: "list",
+            currTask: null,
+          };
+          return newState;
+        }
+
         case "changeView": {
           return changeView(state);
         }
