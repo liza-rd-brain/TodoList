@@ -21,7 +21,7 @@ export function Main() {
   const getView = () => {
     switch (state.view) {
       case "loading": {
-        return <Preloader />;
+        return <Preloader type="big" />;
       }
       case "list": {
         return (

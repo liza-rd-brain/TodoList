@@ -1,15 +1,28 @@
-.preloader {
+.preloader-big {
     position: absolute;
     top:40%;
     z-index: 1;
     width: 80px;
     height: 80px;
-    // margin: -76px 0 0 -76px;
     border:4px solid #f3f3f3;
     border-radius: 50%;
     border-top: 4px solid #626c8f;
     -webkit-animation: spin 1s linear infinite;
     animation: spin 1s linear infinite;
+}
+
+.preloader-small {
+  position: absolute;
+  top:40%;
+  z-index: 1;
+  width: 10px;
+  height: 10px;
+
+  border:1px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 1px solid #626c8f;
+  -webkit-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
 }
   
   @-webkit-keyframes spin {

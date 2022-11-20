@@ -21,6 +21,7 @@ const changeView = (state: State): State => {
       ...state,
       view: "list",
       phase: { type: "idle" },
+      currTask: null,
     };
     return newState;
   } else return state;

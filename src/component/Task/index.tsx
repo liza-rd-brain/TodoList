@@ -95,7 +95,13 @@ export const Task = () => {
               onChange={addFiles}
               className="input-file"
             />
-            <span>Выберите файл</span>
+            <span>
+              {state.phase.type === "fileAdding" ? (
+                <Preloader type="small" />
+              ) : (
+                "выберите файл"
+              )}
+            </span>
           </label>
 
           <div className="fileList">{getFileList(state)}</div>

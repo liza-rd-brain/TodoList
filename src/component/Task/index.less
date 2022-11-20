@@ -58,7 +58,8 @@
 
 .input-file {
     position: relative;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
 
     &:hover span {
         background-color: rgb(202, 200, 200);
@@ -74,13 +75,14 @@
 
 .input-file span {
     position: relative;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
     outline: none;
     text-decoration: none;
     font-size: 14px;
-    vertical-align: middle;
-    text-align: center;
+
     border-radius: 4px;
     background-color: rgb(240 240 240);
     line-height: 22px;
@@ -90,6 +92,7 @@
     border: none;
     margin: 0;
     transition: background-color 0.2s;
+    min-width: 140px;
 
 
 }
