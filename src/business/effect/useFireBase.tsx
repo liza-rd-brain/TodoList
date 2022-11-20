@@ -31,17 +31,15 @@ export function useFireBase() {
       }
 
       case "!loadFile": {
-        let fileList: Array<any> = currTask ? [...currTask.fileList] : [];
+        let fileList: Array<string> = currTask ? [...currTask.fileList] : [];
         console.log("initFileList", fileList);
 
-        // const data = doEffect.data;
         const data = doEffect.type === "!loadFile" ? doEffect.data : null;
         if (data) {
           const newFileList = Object.values(data);
-          // console.log("newFileList", newFileList);
 
           try {
-            const result = Promise.all(
+            const result = Promise.all<Promise<string>[]>(
               newFileList.map((item) => {
                 return new Promise((resolve, reject) => {
                   const storageRef = ref(storage, `files/${item.name}`);
@@ -66,6 +64,8 @@ export function useFireBase() {
                       getDownloadURL(uploadTask.snapshot.ref).then(
                         (downloadURL) => {
                           console.log("File available at", downloadURL);
+
+                          console.log("downloadURL", downloadURL);
                           resolve(downloadURL);
                         }
                       );
@@ -75,7 +75,7 @@ export function useFireBase() {
               })
             );
 
-            result.then((res: any) => {
+            result.then((res: Array<string>) => {
               console.log("all  promise done");
               console.log("res", res);
               fileList.push(...res);

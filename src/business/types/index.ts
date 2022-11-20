@@ -1,3 +1,5 @@
+import { DocumentData } from "firebase/firestore";
+
 export type State = {
   data: any;
   view: "list" | "card" | "loading";
@@ -6,8 +8,14 @@ export type State = {
   currTask: TaskType;
 };
 
+export type DataType = {
+  id: string;
+  value: { name: string; desc: string };
+  fileList: Array<string>;
+};
+
 export type TaskType = {
-  fileList: Array<any>;
+  fileList: Array<string>;
 } | null;
 
 export type EffectType =
@@ -22,11 +30,18 @@ export type PhaseType =
   | { type: "idle" };
 
 export type ActionType =
-  | { type: "loadedTaskList"; payload: any }
-  | { type: "startedAddFile"; payload: any }
-  | { type: "endedAddFile"; payload: any }
+  | { type: "loadedTaskList"; payload: TodoItemList }
+  | { type: "startedAddFile"; payload: FileList | null | undefined }
+  | { type: "endedAddFile"; payload: Array<string> }
   | { type: "editTask" }
   | { type: "deleteTask" }
   | { type: "saveTask" }
   | { type: "checkDone" }
   | { type: "changeView" };
+
+export type TodoItemType = {
+  id: string;
+  value: DocumentData;
+};
+
+export type TodoItemList = Array<TodoItemType>;

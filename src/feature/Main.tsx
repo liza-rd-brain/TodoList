@@ -57,7 +57,7 @@ export function Main() {
     }
   };
 
-  const createTask = (e: any) => {
+  const createTask = (e: Event) => {
     e.stopPropagation();
     console.log("открыть модалку");
     dispatch({ type: "changeView" });
