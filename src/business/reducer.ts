@@ -1,4 +1,4 @@
-import { ActionType, State } from "./types";
+import { ActionType, DataType, State } from "./types";
 
 export const initialState: State = {
   data: null,
@@ -38,6 +38,21 @@ export const reducer = (
       switch (action.type) {
         case "changeView": {
           return changeView(state);
+        }
+        case "openedTask": {
+          const newCurrTask = state.data?.find((item) => {
+            return item.id === action.payload;
+          }) as DataType;
+
+          console.log("newCurrTask", newCurrTask);
+
+          const newState: State = {
+            ...state,
+            view: "card",
+            phase: { type: "cardCreating" },
+            currTask: newCurrTask,
+          };
+          return newState;
         }
       }
     }
@@ -82,7 +97,9 @@ export const reducer = (
           const newState: State = {
             ...state,
             currTask: {
-              fileList: action.payload,
+              value: {
+                fileList: action.payload,
+              },
             },
             doEffect: null,
             phase: { type: "cardCreating" },
@@ -103,10 +120,6 @@ export const reducer = (
           };
 
           return newState;
-        }
-
-        case "editTask": {
-          return state;
         }
 
         case "deleteTask": {

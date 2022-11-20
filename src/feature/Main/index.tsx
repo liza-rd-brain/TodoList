@@ -13,13 +13,14 @@ const BUTTON_TEXT = "Add Task";
 
 export function Main() {
   const { state, dispatch } = useAppContext();
+  console.log("state", state);
 
   const getTaskList = (childNode?: React.ReactPortal) => {
     return (
       <div className="todo-list" id="listTask">
         {childNode ? childNode : null}
         <div className="app-logo">TODO</div>
-        <button className="app-create-task" onClick={(e) => createTask(e)}>
+        <button className="app-button" onClick={(e) => createTask(e)}>
           {BUTTON_TEXT}
         </button>
         <TaskList list={state.data} />

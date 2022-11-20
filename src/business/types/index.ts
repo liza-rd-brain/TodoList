@@ -5,14 +5,19 @@ export type State = {
   view: "list" | "card" | "loading";
   doEffect: EffectType;
   phase: PhaseType;
-  currTask: TaskType;
+  currTask: RecursivePartial<DataType> | null;
+};
+
+//Хэлпер для рекурсивных необязательных полей
+type RecursivePartial<T> = {
+  [P in keyof T]?: RecursivePartial<T[P]>;
 };
 
 export type DataTypeList = Array<DataType>;
 
 export type DataType = {
   id: string;
-  value: DocumentData;
+  value: DataValueType;
 };
 
 export type DataValueType = {
@@ -47,7 +52,7 @@ export type ActionType =
   | { type: "endedAddFile"; payload: FileItemList }
   | { type: "startedSaveTask"; payload: DataValueType }
   | { type: "endedSaveTask" }
-  | { type: "editTask" }
+  | { type: "openedTask"; payload: string }
   | { type: "deleteTask" }
   | { type: "saveTask" }
   | { type: "checkDone" }

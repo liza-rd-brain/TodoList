@@ -12,13 +12,13 @@ const DATE_TASK_TEXT = "дата завершения";
 const FILE_TASK_TEXT = "прикрепленные файлы";
 
 const getFileList = (state: State) => {
-  const fileItemList = state.currTask?.fileList;
+  const fileItemList = state.currTask?.value?.fileList;
   if (fileItemList) {
     return fileItemList.map((fileItem, index) => {
       return (
         <div key={index}>
-          <a href={fileItem.link} target="blank">
-            {fileItem.name}
+          <a href={fileItem?.link} target="blank">
+            {fileItem?.name}
           </a>
         </div>
       );
@@ -53,10 +53,10 @@ export const Task = () => {
       desc: textArea.current?.value as string,
     };
     const payloadWithFile = {
-      fileList: state.currTask?.fileList as FileItemList,
+      fileList: state.currTask?.value?.fileList as FileItemList,
     };
 
-    const newPayload = state.currTask?.fileList
+    const newPayload = state.currTask?.value?.fileList
       ? Object.assign(payloadCore, payloadWithFile)
       : payloadCore;
 
@@ -81,7 +81,7 @@ export const Task = () => {
             ref={textInput}
             type="text"
             className="task-textinput"
-            defaultValue=""
+            defaultValue={state.currTask?.value?.name}
           />
         </div>
         <div className="content-row">
@@ -93,6 +93,7 @@ export const Task = () => {
             id="input"
             rows={10}
             cols={40}
+            defaultValue={state.currTask?.value?.desc}
           ></textarea>
         </div>
         <div className="content-row">

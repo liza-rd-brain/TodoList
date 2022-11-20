@@ -1,15 +1,18 @@
 import React, { FC } from "react";
 
-const ToDoItem = ({ item }) => {
-  return <div>{item}</div>;
-};
+import { DataTypeList } from "../../business/types";
+import { TaskPreview } from "../../component/TaskPreview";
 
-export const TaskList = ({ list }) => {
-  return (
-    <div>
-      {list.map((item, index) => {
-        return <ToDoItem key={index} item={item.value.name} />;
-      })}
-    </div>
-  );
+import "./index.less";
+
+export const TaskList: FC<{ list: DataTypeList | null }> = ({ list }) => {
+  if (list) {
+    return (
+      <div className="task-list-container">
+        {list.map((item, index) => {
+          return <TaskPreview key={index} item={item} />;
+        })}
+      </div>
+    );
+  } else return null;
 };
