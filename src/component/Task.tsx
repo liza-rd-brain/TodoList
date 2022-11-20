@@ -9,10 +9,10 @@ import { State } from "../business/types";
 const getFileList = (state: State) => {
   const fileItemList = state.currTask?.fileList;
   if (fileItemList) {
-    return fileItemList.map((item, index) => {
+    return fileItemList.map((fileItem, index) => {
       return (
         <div key={index}>
-          <a href={item}>test</a>
+          <a href={fileItem.link}>{fileItem.name}</a>
         </div>
       );
     });
@@ -53,7 +53,6 @@ export const Task = () => {
     console.log(textInput.current);
   };
 
-  /*   React.MutableRefObject<HTMLDivElement | undefined> */
   return (
     <div className="task-container" id="taskContainer">
       <div className="header-panel">

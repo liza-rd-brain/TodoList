@@ -10,6 +10,7 @@ import {
   UploadTask,
   uploadBytes,
 } from "firebase/storage";
+import { FileItemList, FileItemType } from "../types";
 
 export function useFireBase() {
   const {
@@ -21,6 +22,7 @@ export function useFireBase() {
     switch (doEffect?.type) {
       case "!loadFireBase": {
         const q = query(collection(db, "todo"));
+
         onSnapshot(q, (querySnapshot) => {
           const todoList = querySnapshot.docs.map((doc) => ({
             id: doc.id,
@@ -32,7 +34,7 @@ export function useFireBase() {
       }
 
       case "!loadFile": {
-        let fileList: Array<string> = currTask ? [...currTask.fileList] : [];
+        let fileList: FileItemList = currTask ? [...currTask.fileList] : [];
         console.log("initFileList", fileList);
 
         const data = doEffect.type === "!loadFile" ? doEffect.data : null;
@@ -40,20 +42,25 @@ export function useFireBase() {
           const newFileList = Object.values(data);
 
           try {
-            const result = Promise.all<Promise<string>[]>(
-              newFileList.map((item) => {
+            const result = Promise.all<Promise<FileItemType>[]>(
+              newFileList.map((fileItem) => {
+                console.log("fileItem", fileItem);
                 return new Promise((resolve, reject) => {
-                  const storageRef = ref(storage, `files/${item.name}`);
-                  const uploadTask = uploadBytesResumable(storageRef, item);
+                  const storageRef = ref(storage, `files/${fileItem.name}`);
+                  const uploadTask = uploadBytesResumable(storageRef, fileItem);
 
-                  uploadBytes(storageRef, item).then((snapshot) => {
+                  uploadBytes(storageRef, fileItem).then((snapshot) => {
                     console.log("Uploaded a blob or file!");
                     getDownloadURL(uploadTask.snapshot.ref).then(
                       (downloadURL) => {
                         console.log("File available at", downloadURL);
 
                         console.log("downloadURL", downloadURL);
-                        resolve(downloadURL);
+                        resolve({
+                          link: downloadURL,
+                          name: fileItem.name,
+                          type: fileItem.type,
+                        });
                       }
                     );
                   });
@@ -62,7 +69,7 @@ export function useFireBase() {
             );
 
             result.then(
-              (res: Array<string>) => {
+              (res: FileItemList) => {
                 fileList.push(...res);
 
                 dispatch({

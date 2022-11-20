@@ -1,7 +1,7 @@
 import { DocumentData } from "firebase/firestore";
 
 export type State = {
-  data: any;
+  data: DataType;
   view: "list" | "card" | "loading";
   doEffect: EffectType;
   phase: PhaseType;
@@ -11,11 +11,15 @@ export type State = {
 export type DataType = {
   id: string;
   value: { name: string; desc: string };
-  fileList: Array<string>;
+  fileList: FileItemList;
 };
 
+export type FileItemList = Array<FileItemType>;
+
+export type FileItemType = { name: string; type: string; link: string };
+
 export type TaskType = {
-  fileList: Array<string>;
+  fileList: FileItemList;
 } | null;
 
 export type EffectType =
@@ -32,7 +36,7 @@ export type PhaseType =
 export type ActionType =
   | { type: "loadedTaskList"; payload: TodoItemList }
   | { type: "startedAddFile"; payload: FileList | null | undefined }
-  | { type: "endedAddFile"; payload: Array<string> }
+  | { type: "endedAddFile"; payload: FileItemList }
   | { type: "editTask" }
   | { type: "deleteTask" }
   | { type: "saveTask" }
