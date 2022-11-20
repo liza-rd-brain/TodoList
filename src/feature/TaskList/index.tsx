@@ -1,11 +1,10 @@
 import React, { FC } from "react";
-import { DocumentData } from "firebase/firestore";
 
 const ToDoItem = ({ item }) => {
   return <div>{item}</div>;
 };
 
-export const ToDoList = ({ list }) => {
+export const TaskList = ({ list }) => {
   return (
     <div>
       {list.map((item, index) => {

@@ -1,9 +1,10 @@
 import React, { useRef } from "react";
-import "./index.less";
-import { useAppContext } from "../../AppProvider";
 
-import { FileItemList, State } from "../../business/types";
 import { Preloader } from "../Preloader";
+import { useAppContext } from "../../AppProvider";
+import { FileItemList, State } from "../../business/types";
+
+import "./index.less";
 
 const NAME_TASK_TEXT = "заголовок";
 const DESC_TASK_TEXT = "описание";

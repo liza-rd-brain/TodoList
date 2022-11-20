@@ -1,11 +1,8 @@
 import React, { useReducer } from "react";
-import "./App.less";
-
-import { AppContext } from "./AppProvider";
-
-import { initialState, reducer } from "./business/reducer";
 
 import { Main } from "./feature/Main";
+import { AppContext } from "./AppProvider";
+import { initialState, reducer } from "./business/reducer";
 
 export function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
