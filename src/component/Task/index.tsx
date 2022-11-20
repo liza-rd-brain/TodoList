@@ -13,7 +13,9 @@ const getFileList = (state: State) => {
     return fileItemList.map((fileItem, index) => {
       return (
         <div key={index}>
-          <a href={fileItem.link}>{fileItem.name}</a>
+          <a href={fileItem.link} target="blank">
+            {fileItem.name}
+          </a>
         </div>
       );
     });
