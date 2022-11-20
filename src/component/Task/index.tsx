@@ -58,16 +58,6 @@ export const Task = () => {
       },
     });
 
-    // try {
-    //   addDoc(collection(db, "todo"), {
-    //     name: textInput.current?.value,
-    //     desc: textArea.current?.value,
-    //     fileList: state.currTask?.fileList,
-    //   });
-    // } catch (err) {
-    //   console.log(err);
-    // }
-
     console.log(textInput.current);
   };
 

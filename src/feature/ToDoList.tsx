@@ -6,8 +6,6 @@ const ToDoItem = ({ item }) => {
 };
 
 export const ToDoList = ({ list }) => {
-  console.log(list);
-
   return (
     <div>
       {list.map((item, index) => {

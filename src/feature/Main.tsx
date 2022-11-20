@@ -9,7 +9,7 @@ import { ToDoList } from "./ToDoList";
 import { initialState, reducer } from "../business/reducer";
 import { Preloader } from "../component/Preloader";
 import { Task } from "../component/Task";
-import { useFireBase } from "../business/effect";
+import { useClosePortal, useFireBase } from "../business/effect";
 
 const BUTTON_TEXT = "Add Task";
 
@@ -56,7 +56,6 @@ export function Main() {
 
   const createTask = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.stopPropagation();
-    console.log("открыть модалку");
     dispatch({ type: "changeView" });
   };
 
@@ -81,6 +80,7 @@ export function Main() {
   // }, [state.view]);
 
   useFireBase();
+  useClosePortal();
 
   return (
     <div
