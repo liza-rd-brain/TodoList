@@ -88,6 +88,17 @@ export const reducer = (
           return newState;
         }
 
+        /* Не избыточно ли это обновление?? */
+        case "endedSaveTask": {
+          const newState: State = {
+            ...state,
+            doEffect: null,
+            phase: { type: "idle" },
+            view: "list",
+          };
+          return newState;
+        }
+
         case "endedAddFile": {
           const newState: State = {
             ...state,
@@ -121,6 +132,7 @@ export const reducer = (
         }
       }
     }
+
     case "waitingTaskList": {
       switch (action.type) {
         case "loadedTaskList": {

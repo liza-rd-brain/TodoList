@@ -8,7 +8,6 @@ export function useClosePortal() {
   } = useAppContext();
 
   const closeModal = (e: MouseEvent) => {
-    console.log("закрыть модалку");
     const container = document.querySelector("#taskContainer") as Element;
 
     const withinBoundaries = e.composedPath().includes(container);
@@ -18,7 +17,6 @@ export function useClosePortal() {
   };
   useEffect(() => {
     if (view === "card") {
-      console.log("подписка");
       document.addEventListener("click", closeModal);
 
       return () => {

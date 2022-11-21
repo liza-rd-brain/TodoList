@@ -64,8 +64,6 @@ export const Task = () => {
       type: "startedSaveTask",
       payload: newPayload,
     });
-
-    console.log(textInput.current);
   };
 
   return (

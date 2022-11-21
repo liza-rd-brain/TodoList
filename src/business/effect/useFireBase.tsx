@@ -20,6 +20,7 @@ export function useFireBase() {
 
   useEffect(() => {
     switch (doEffect?.type) {
+      /* Автоматически подтягивает данные из бд */
       case "!loadFireBase": {
         const q = query(collection(db, "todo"));
 
