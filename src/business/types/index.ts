@@ -39,6 +39,7 @@ export type EffectType =
   | { type: "!loadFile"; data: FileList | null | undefined }
   | { type: "!saveTask"; data: DataValueType }
   | { type: "!updateTask"; data: DataValueType }
+  | { type: "!deleteTask"; data: string }
   | null;
 
 export type PhaseType =
@@ -54,9 +55,9 @@ export type ActionType =
   | { type: "endedAddFile"; payload: FileItemList }
   | { type: "startedSaveTask"; payload: DataValueType }
   | { type: "endedSaveTask" }
-  | { type: "endedUpdateTask" }
   | { type: "openedTask"; payload: string }
-  | { type: "deleteTask" }
+  | { type: "startedDeleteTask"; payload: string }
+  | { type: "endedDeleteTask" }
   | { type: "saveTask" }
   | { type: "checkDone" }
   | { type: "changeView" };

@@ -6,6 +6,13 @@ import "./index.less";
 export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
   const { state, dispatch } = useAppContext();
 
+  const deleteTask = () => {
+    dispatch({
+      type: "startedDeleteTask",
+      payload: item.id,
+    });
+  };
+
   const openTask = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.stopPropagation();
 
@@ -20,7 +27,7 @@ export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
       <div className="preview-description">{item.value.desc}</div>
       <div className="preview-date">{"здесь будет дата"}</div>
       <input type="checkbox" />
-      <button>delete</button>
+      <button onClick={deleteTask}>delete</button>
     </div>
   );
 };

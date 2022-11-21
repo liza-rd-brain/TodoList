@@ -47,11 +47,12 @@ export const Task = () => {
   };
 
   //TODO: fix assertion
-  const saveTask = async () => {
+  const saveTask = () => {
     const payloadCore = {
       name: textInput.current?.value as string,
       desc: textArea.current?.value as string,
     };
+
     const payloadWithFile = {
       fileList: state.currTask?.value?.fileList as FileItemList,
     };
@@ -63,6 +64,13 @@ export const Task = () => {
     dispatch({
       type: "startedSaveTask",
       payload: newPayload,
+    });
+  };
+
+  const deleteTask = () => {
+    dispatch({
+      type: "startedDeleteTask",
+      payload: state.currTask?.id as string,
     });
   };
 
@@ -124,10 +132,7 @@ export const Task = () => {
         </div>
       </div>
       <div className="bottom-panel">
-        <button
-          className="control-button button-delete"
-          onClick={() => console.log("delete")}
-        >
+        <button className="control-button button-delete" onClick={deleteTask}>
           delete
         </button>
         <button className="control-button button-save" onClick={saveTask}>

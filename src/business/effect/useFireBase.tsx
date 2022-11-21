@@ -9,6 +9,7 @@ import {
   addDoc,
   doc,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 
 import {
@@ -117,9 +118,20 @@ export function useFireBase() {
         try {
           updateDoc(taskDocRef, data);
         } catch (err) {
-          alert(err);
+          console.log(err);
         }
-        dispatch({ type: "endedUpdateTask" });
+        dispatch({ type: "endedSaveTask" });
+        break;
+      }
+
+      case "!deleteTask": {
+        const taskDocRef = doc(db, "todo", doEffect.data);
+        try {
+          deleteDoc(taskDocRef);
+        } catch (err) {
+          console.log(err);
+        }
+        dispatch({ type: "endedDeleteTask" });
         break;
       }
 

@@ -67,7 +67,25 @@ export const reducer = (
           return newState;
         }
 
-        case "endedUpdateTask": {
+        case "endedSaveTask": {
+          const newState: State = {
+            ...state,
+            view: "loading",
+            doEffect: { type: "!loadFireBase" },
+            phase: { type: "waitingTaskList" },
+          };
+          return newState;
+        }
+
+        case "startedDeleteTask": {
+          const newState: State = {
+            ...state,
+            doEffect: { type: "!deleteTask", data: action.payload },
+          };
+
+          return newState;
+        }
+        case "endedDeleteTask": {
           const newState: State = {
             ...state,
             view: "loading",
@@ -119,6 +137,10 @@ export const reducer = (
         }
 
         case "changeView": {
+          return changeView(state);
+        }
+
+        case "startedDeleteTask": {
           return changeView(state);
         }
       }
