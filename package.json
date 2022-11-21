@@ -3,8 +3,8 @@
   "source": "src/index.html",
   "license": "MIT",
   "scripts": {
-    "start": "parcel",
-    "build": "parcel build",
+    "start": "parcel --no-cache",
+    "build": "parcel build --no-cache",
     "lint": "eslint",
     "check": "tsc --noEmit"
   },
