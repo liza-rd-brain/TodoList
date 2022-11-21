@@ -40,6 +40,13 @@ export function useFireBase() {
 
           dispatch({ type: "loadedTaskList", payload: todoList });
         });
+        break;
+
+        /* Нужна ли отписка и контроль за обновлением-?! */
+        // return () => {
+        //   console.log("отписка");
+        //   unsubscribe();
+        // };
       }
 
       case "!loadFile": {

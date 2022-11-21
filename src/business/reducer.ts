@@ -70,9 +70,9 @@ export const reducer = (
         case "endedUpdateTask": {
           const newState: State = {
             ...state,
-            doEffect: null,
-            view: "list",
-            phase: { type: "idle" },
+            view: "loading",
+            doEffect: { type: "!loadFireBase" },
+            phase: { type: "waitingTaskList" },
           };
           return newState;
         }
@@ -98,13 +98,12 @@ export const reducer = (
           return newState;
         }
 
-        /* Не избыточно ли это обновление?? */
         case "endedSaveTask": {
           const newState: State = {
             ...state,
-            doEffect: null,
-            phase: { type: "idle" },
-            view: "list",
+            view: "loading",
+            doEffect: { type: "!loadFireBase" },
+            phase: { type: "waitingTaskList" },
           };
           return newState;
         }
@@ -163,32 +162,33 @@ export const reducer = (
     }
 
     default: {
-      switch (action.type) {
-        case "loadedTaskList": {
-          const newState: State = {
-            ...state,
-            data: action.payload,
-            view: "list",
-            phase: { type: "idle" },
-          };
+      return state;
+      // switch (action.type) {
+      //   case "loadedTaskList": {
+      //     const newState: State = {
+      //       ...state,
+      //       data: action.payload,
+      //       view: "list",
+      //       phase: { type: "idle" },
+      //     };
 
-          return newState;
-        }
+      //     return newState;
+      //   }
 
-        case "deleteTask": {
-          return state;
-        }
+      //   case "deleteTask": {
+      //     return state;
+      //   }
 
-        case "saveTask": {
-          return state;
-        }
-        case "checkDone": {
-          return state;
-        }
+      //   case "saveTask": {
+      //     return state;
+      //   }
+      //   case "checkDone": {
+      //     return state;
+      //   }
 
-        default:
-          return state;
-      }
+      //   default:
+      //     return state;
+      // }
     }
   }
 };

@@ -75,7 +75,7 @@ export const Task = () => {
         <div className="content-row">
           <div className="task-caption">{NAME_TASK_TEXT}</div>
           <input
-            required={true}
+            required
             ref={textInput}
             type="text"
             className="task-textinput"
