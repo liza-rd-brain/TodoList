@@ -61,9 +61,19 @@ export const reducer = (
         case "startedSaveTask": {
           const newState: State = {
             ...state,
-            doEffect: { type: "!saveTask", data: action.payload },
+            doEffect: { type: "!updateTask", data: action.payload },
           };
-          console.log(newState);
+
+          return newState;
+        }
+
+        case "endedUpdateTask": {
+          const newState: State = {
+            ...state,
+            doEffect: null,
+            view: "list",
+            phase: { type: "idle" },
+          };
           return newState;
         }
       }

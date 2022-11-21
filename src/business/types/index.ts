@@ -38,6 +38,7 @@ export type EffectType =
   | { type: "!loadFireBase" }
   | { type: "!loadFile"; data: FileList | null | undefined }
   | { type: "!saveTask"; data: DataValueType }
+  | { type: "!updateTask"; data: DataValueType }
   | null;
 
 export type PhaseType =
@@ -53,6 +54,7 @@ export type ActionType =
   | { type: "endedAddFile"; payload: FileItemList }
   | { type: "startedSaveTask"; payload: DataValueType }
   | { type: "endedSaveTask" }
+  | { type: "endedUpdateTask" }
   | { type: "openedTask"; payload: string }
   | { type: "deleteTask" }
   | { type: "saveTask" }

@@ -2,7 +2,15 @@ import { useEffect } from "react";
 import { useAppContext } from "../../AppProvider";
 
 import { db, storage } from "../../firebase";
-import { collection, query, onSnapshot, addDoc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  onSnapshot,
+  addDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
+
 import {
   ref,
   getDownloadURL,
@@ -24,7 +32,7 @@ export function useFireBase() {
       case "!loadFireBase": {
         const q = query(collection(db, "todo"));
 
-        onSnapshot(q, (querySnapshot) => {
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
           const todoList = querySnapshot.docs.map((doc) => ({
             id: doc.id,
             value: doc.data() as DataValueType,
@@ -81,18 +89,31 @@ export function useFireBase() {
             console.log(err);
           }
         }
+        break;
       }
 
       case "!saveTask": {
-        const data = doEffect.type === "!saveTask" ? doEffect.data : null;
-
         try {
-          addDoc(collection(db, "todo"), data);
+          addDoc(collection(db, "todo"), doEffect.data);
         } catch (err) {
           console.log(err);
         }
 
         dispatch({ type: "endedSaveTask" });
+        break;
+      }
+
+      case "!updateTask": {
+        const data = doEffect.data;
+        const currId = currTask?.id as string;
+        const taskDocRef = doc(db, "todo", currId);
+        try {
+          updateDoc(taskDocRef, data);
+        } catch (err) {
+          alert(err);
+        }
+        dispatch({ type: "endedUpdateTask" });
+        break;
       }
 
       default: {
