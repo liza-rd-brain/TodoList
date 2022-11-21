@@ -44,14 +44,26 @@ export const reducer = (
             return item.id === action.payload;
           }) as DataType;
 
-          console.log("newCurrTask", newCurrTask);
-
           const newState: State = {
             ...state,
             view: "card",
             phase: { type: "cardEditing" },
             currTask: newCurrTask,
           };
+
+          return newState;
+        }
+      }
+    }
+
+    case "cardEditing": {
+      switch (action.type) {
+        case "startedSaveTask": {
+          const newState: State = {
+            ...state,
+            doEffect: { type: "!saveTask", data: action.payload },
+          };
+          console.log(newState);
           return newState;
         }
       }
@@ -75,6 +87,7 @@ export const reducer = (
           };
           return newState;
         }
+
         case "endedAddFile": {
           const newState: State = {
             ...state,
@@ -106,6 +119,24 @@ export const reducer = (
           };
           return newState;
         }
+      }
+    }
+    case "waitingTaskList": {
+      switch (action.type) {
+        case "loadedTaskList": {
+          const newState: State = {
+            ...state,
+            data: action.payload,
+            view: "list",
+            phase: { type: "idle" },
+            doEffect: null,
+          };
+
+          return newState;
+        }
+
+        default:
+          return state;
       }
     }
 
