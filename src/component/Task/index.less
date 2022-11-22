@@ -11,7 +11,16 @@
     gap: 15px
 }
 
-.header-panel,
+.header-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 30px;
+    &>*{
+        display: flex;
+        gap:15px
+    }
+}
+
 .bottom-panel {
     display: flex;
     justify-content: end;
@@ -55,8 +64,8 @@
 .task-caption {
     display: block;
     text-align: start;
-    
-  
+
+
     &::first-letter {
         text-transform: uppercase;
     }
@@ -90,7 +99,7 @@
         background-color: rgb(157, 155, 155);
     }
 
-   
+
 }
 
 .input-file span {
@@ -141,10 +150,9 @@
 
 .data-wrapper {
     display: flex;
-    gap:10px
+    gap: 10px
 }
 
-.date-mark{
+.date-mark {
     margin-left: 10px;
 }
-

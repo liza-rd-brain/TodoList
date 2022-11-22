@@ -5,34 +5,43 @@ export type State = {
   view: "list" | "card" | "loading";
   doEffect: EffectType;
   phase: PhaseType;
-  currTask: RecursivePartial<DataType> | null;
+  currTask: DataType | null;
 };
 
 //Хэлпер для рекурсивных необязательных полей
-type RecursivePartial<T> = {
-  [P in keyof T]?: RecursivePartial<T[P]>;
-};
+// type RecursivePartial<T> = {
+//   [P in keyof T]?: RecursivePartial<T[P]>;
+// };
 
 export type DataTypeList = Array<DataType>;
 
+export type DataTypePartial = {
+  id: string;
+  value: DataValueTypePartial;
+  isExpired: boolean;
+};
+
 export type DataType = {
   id: string;
-  value: DataValueType;
-  isExpired?: Boolean;
+  value: DataValueType | DataValueTypePartial;
+  isExpired: boolean;
 };
+
+export type DataValueTypePartial = Partial<DataValueType>;
 
 export type LoadedDataType = Omit<DataType, "isExpired">;
 
 export type DataValueType = {
   name: string;
-  desc?: string;
-  fileList?: FileItemList;
-  endDate?: Partial<DateType>;
+  desc: string;
+  isDone: boolean;
+  fileList?: FileItemList | null;
+  endDate: Partial<DateType> | null;
 };
 
 export type DateType = {
   date: string;
-  time?: string;
+  time: string | null;
 };
 
 export type FileItemList = Array<FileItemType>;
@@ -45,7 +54,7 @@ export type TaskType = {
 
 export type EffectType =
   | { type: "!loadFireBase" }
-  | { type: "!loadFile"; data: FileList | null | undefined }
+  | { type: "!loadFile"; data: FileList }
   | { type: "!saveTask"; data: DataValueType }
   | { type: "!updateTask"; data: DataValueType }
   | { type: "!deleteTask"; data: string }

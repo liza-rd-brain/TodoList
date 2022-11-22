@@ -2,7 +2,7 @@ import React, { FormEvent, FormEventHandler, useRef, useState } from "react";
 
 import { Preloader } from "../Preloader";
 import { useAppContext } from "../../AppProvider";
-import { FileItemList, State } from "../../business/types";
+import { DataType, FileItemList, State } from "../../business/types";
 
 import "./index.less";
 import dayjs from "dayjs";
@@ -31,7 +31,7 @@ const getFileList = (state: State) => {
 
 export const Task = () => {
   const { state, dispatch } = useAppContext();
-
+  const currTask = state.currTask;
   /**
    * В fileList можно добавить сразу несколько файлов
    * Добавление новых не перезаписывает старые
@@ -44,13 +44,13 @@ export const Task = () => {
   const minData = dayjs().format("YYYY-MM-DD");
 
   type DateStateType = {
-    date?: string;
-    time?: string;
+    date: string | null;
+    time: string | null;
   };
 
   const initState: DateStateType = {
-    date: undefined,
-    time: undefined,
+    date: null,
+    time: null,
   };
 
   const [dateState, setDataState] = useState(() => {
@@ -76,7 +76,10 @@ export const Task = () => {
   console.log("dataExpired", dataExpired);
 
   const addFiles = () => {
-    dispatch({ type: "startedAddFile", payload: fileInput.current?.files });
+    dispatch({
+      type: "startedAddFile",
+      payload: fileInput.current?.files as FileList,
+    });
   };
 
   const saveTask = (e: FormEvent) => {
@@ -85,6 +88,7 @@ export const Task = () => {
     const payloadCore = {
       name: textInput.current?.value as string,
       desc: textArea.current?.value as string,
+      isDone: state.currTask?.value.isDone as boolean,
       endDate: {
         date: dateState.date || "",
         time: dateState.time || "",
@@ -112,9 +116,28 @@ export const Task = () => {
     });
   };
 
+  const makeTaskDone = () => {
+    const doneTask = {
+      ...state.currTask,
+      value: {
+        ...state.currTask?.value,
+        isDone: true,
+      },
+    };
+    // dispatch({
+    //   type: "startedSaveTask",
+    //   payload: doneTask,
+    // });
+  };
+
   return (
     <div className="task-container" id="taskContainer">
       <div className="header-panel">
+        <div>
+          <input type="checkbox" onClick={makeTaskDone} />
+          <span>завершить задачу</span>
+        </div>
+
         <button onClick={closeModal}>x</button>
       </div>
       <form onSubmit={saveTask}>
@@ -159,7 +182,7 @@ export const Task = () => {
               />
               <input
                 type="time"
-                defaultValue={state.currTask?.value?.endDate?.time}
+                defaultValue={state.currTask?.value?.endDate?.time || undefined}
                 onChange={saveDate}
               ></input>
             </div>

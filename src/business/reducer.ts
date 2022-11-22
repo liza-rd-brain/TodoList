@@ -122,7 +122,7 @@ export const reducer = (
         case "startedAddFile": {
           const newState: State = {
             ...state,
-            doEffect: { type: "!loadFile", data: action.payload },
+            doEffect: { type: "!loadFile", data: action.payload as FileList },
             phase: { type: "fileAdding" },
           };
           return newState;
@@ -181,13 +181,16 @@ export const reducer = (
           const newState: State = {
             ...state,
             currTask: {
+              ...(state.currTask as DataType),
               value: {
+                ...state.currTask?.value,
+                name: "",
+
                 fileList: action.payload,
               },
             },
-            doEffect: null,
-            phase: { type: "cardCreating" },
           };
+
           return newState;
         }
       }
