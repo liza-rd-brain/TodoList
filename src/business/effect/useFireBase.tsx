@@ -10,6 +10,8 @@ import {
   doc,
   updateDoc,
   deleteDoc,
+  orderBy,
+  Timestamp,
 } from "firebase/firestore";
 
 import {
@@ -31,9 +33,12 @@ export function useFireBase() {
     switch (doEffect?.type) {
       /* Автоматически подтягивает данные из бд */
       case "!loadFireBase": {
-        const q = query(collection(db, "todo"));
+        const currQuery = query(
+          collection(db, "todo"),
+          orderBy("creationDate")
+        );
 
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const unsubscribe = onSnapshot(currQuery, (querySnapshot) => {
           const todoList = querySnapshot.docs.map((doc) => ({
             id: doc.id,
             value: doc.data() as DataValueType,
@@ -103,7 +108,10 @@ export function useFireBase() {
 
       case "!saveTask": {
         try {
-          addDoc(collection(db, "todo"), doEffect.data);
+          addDoc(collection(db, "todo"), {
+            ...doEffect.data,
+            creationDate: Timestamp.now(),
+          });
         } catch (err) {
           console.log(err);
         }
