@@ -57,22 +57,11 @@ export const Task = () => {
     return initState;
   });
 
+  console.log("dateState", dateState);
+
   const saveDate = (e) => {
     setDataState((prev) => {
-      return {
-        ...prev,
-        date: e.target.value,
-      };
-    });
-  };
-
-  const saveTime = (e) => {
-    e.preventDefault();
-    setDataState((prev) => {
-      return {
-        ...prev,
-        time: e.target.value,
-      };
+      return { ...prev, [e.target.type]: e.target.value };
     });
   };
 
@@ -170,13 +159,9 @@ export const Task = () => {
               />
               <input
                 type="time"
-                // ref={timeInput}
                 defaultValue={state.currTask?.value?.endDate?.time}
-                onChange={saveTime}
+                onChange={saveDate}
               ></input>
-              {/* <button className="control-button button-save" onClick={saveDate}>
-                save
-              </button> */}
             </div>
           </div>
 
