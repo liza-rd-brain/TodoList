@@ -1,4 +1,4 @@
-import React, { FormEvent, FormEventHandler, useRef } from "react";
+import React, { FormEvent, FormEventHandler, useRef, useState } from "react";
 
 import { Preloader } from "../Preloader";
 import { useAppContext } from "../../AppProvider";
@@ -42,9 +42,24 @@ export const Task = () => {
   const dateInput = useRef<HTMLInputElement>(null);
   const timeInput = useRef<HTMLInputElement>(null);
 
+  const hasTimeInput = Boolean(
+    timeInput.current?.value || state.currTask?.value?.endDate?.time
+  );
+
+  const [needData, setNeedData] = useState(hasTimeInput);
+
+  console.log("needData", needData);
+
+  /* Если ввели время - дата обязательна! */
+  const switchNeedData = () => {
+    setNeedData(hasTimeInput);
+  };
+
   const defaultData = dayjs().add(1, "day").format("YYYY-MM-DD");
   const minData = dayjs().format("YYYY-MM-DD");
   const defaultTime = dayjs().format("HH:mm");
+
+  console.log(Boolean(timeInput.current?.value));
 
   const closeModal = () => {
     dispatch({ type: "changeView" });
@@ -53,6 +68,8 @@ export const Task = () => {
   const addFiles = () => {
     dispatch({ type: "startedAddFile", payload: fileInput.current?.files });
   };
+
+  const getPayloadCore = ({ name, desc, endDate }) => {};
 
   const saveTask = (e: FormEvent) => {
     e.preventDefault();
@@ -67,7 +84,14 @@ export const Task = () => {
       },
     };
 
-    // console.log("payloadCore", payloadCore);
+    // const payloadCore = getPayloadCore({
+    //   name: textInput.current?.value,
+    //   desc: textArea.current?.value,
+    //   endDate: {
+    //     date: dateInput.current?.value as string,
+    //     time: timeInput.current?.value as string,
+    //   },
+    // });
 
     const payloadWithFile = {
       fileList: state.currTask?.value?.fileList as FileItemList,
@@ -76,8 +100,6 @@ export const Task = () => {
     const newPayload = state.currTask?.value?.fileList
       ? Object.assign(payloadCore, payloadWithFile)
       : payloadCore;
-
-    console.log(dateInput?.current?.value, timeInput.current?.value);
 
     dispatch({
       type: "startedSaveTask",
@@ -90,11 +112,6 @@ export const Task = () => {
       type: "startedDeleteTask",
       payload: state.currTask?.id as string,
     });
-  };
-
-  const preventSubmit = (e) => {
-    e.preventDefault();
-    console.log("preventSubmit");
   };
 
   return (
@@ -129,18 +146,21 @@ export const Task = () => {
           </div>
           <div className="content-row">
             <div className="task-caption">{DATE_TASK_TEXT}</div>
+
             <div className="data-wrapper">
               {/* TODO: можно добавить минимальную дату и время */}
               <input
                 type="date"
                 ref={dateInput}
-                defaultValue={defaultData}
+                defaultValue={state.currTask?.value?.endDate?.date}
+                required={needData}
                 min={minData}
               />
               <input
                 type="time"
                 ref={timeInput}
-                defaultValue={defaultTime}
+                defaultValue={state.currTask?.value?.endDate?.time}
+                onChange={switchNeedData}
               ></input>
             </div>
           </div>

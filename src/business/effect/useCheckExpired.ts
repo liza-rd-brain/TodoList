@@ -14,7 +14,6 @@ export function useCheckExpired() {
 
   const checkExpiration = () => {
     if (data) {
-      console.log("checkExpiration");
       const newDataWithExpired = data.map((currItem) => {
         const currDateExpired = currItem.value.endDate;
         if (currDateExpired) {
@@ -36,10 +35,13 @@ export function useCheckExpired() {
   };
 
   useEffect(() => {
-    if (!doEffect) {
+    const hasNotExpiredTask = data?.find(
+      (item) => /* item.value.!isExpired? */ item.value.endDate?.date
+    );
+    if (!doEffect && data?.length && hasNotExpiredTask) {
       const interval = setInterval(checkExpiration, UPDATE_TIME);
 
       return () => clearTimeout(interval);
     }
-  });
+  }, [data?.length, doEffect]);
 }

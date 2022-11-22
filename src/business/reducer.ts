@@ -60,7 +60,6 @@ export const reducer = (
             ...state,
             data: action.payload,
           };
-          console.log("updateExpired", newState);
 
           return newState;
         }
@@ -112,7 +111,6 @@ export const reducer = (
             ...state,
             data: action.payload,
           };
-          console.log("updateExpired", newState);
 
           return newState;
         }
@@ -171,7 +169,6 @@ export const reducer = (
             ...state,
             data: action.payload,
           };
-          console.log("updateExpired", newState);
 
           return newState;
         }
@@ -222,7 +219,6 @@ export const reducer = (
             ...state,
             data: action.payload,
           };
-          console.log("updateExpired", newState);
 
           return newState;
         }
