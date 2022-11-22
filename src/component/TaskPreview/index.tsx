@@ -24,11 +24,18 @@ export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
   };
   return (
     <div className="preview-container" onClick={openTask}>
-      <div className="preview-title">{item.value.name}</div>
-      <div className="preview-description">{item.value.desc}</div>
-      <div className="preview-date">{"здесь будет дата"}</div>
-      <input type="checkbox" />
-      <button onClick={(e) => deleteTask(e)}>delete</button>
+      <div className="left-panel">
+        <input type="checkbox" />
+      </div>
+      <div className="right-panel">
+        <div className="preview-title">{item.value.name}</div>
+        <div className="preview-description">{item.value.desc}</div>
+        <div className="preview-footer">
+          <div className="preview-date">{"здесь будет дата"}</div>
+
+          <button onClick={(e) => deleteTask(e)}>delete</button>
+        </div>
+      </div>
     </div>
   );
 };
