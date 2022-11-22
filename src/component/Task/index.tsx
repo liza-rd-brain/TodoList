@@ -74,71 +74,79 @@ export const Task = () => {
     });
   };
 
+  const preventSubmit = (e) => {
+    e.preventDefault();
+    console.log("preventSubmit");
+  };
+
   return (
     <div className="task-container" id="taskContainer">
       <div className="header-panel">
         <button onClick={closeModal}>x</button>
       </div>
-      <div className="task-content">
-        <div className="content-row">
-          <div className="task-caption">{NAME_TASK_TEXT}</div>
-          <input
-            required
-            ref={textInput}
-            type="text"
-            className="task-textinput"
-            defaultValue={state.currTask?.value?.name}
-          />
-        </div>
-        <div className="content-row">
-          <div className="task-caption">{DESC_TASK_TEXT}</div>
-          <textarea
-            ref={textArea}
-            className="task-textarea"
-            name="post"
-            id="input"
-            rows={10}
-            cols={40}
-            defaultValue={state.currTask?.value?.desc}
-          ></textarea>
-        </div>
-        <div className="content-row">
-          <div className="task-caption">{DATE_TASK_TEXT}</div>
-          <div>{"добавить дату завершения"}</div>
-        </div>
+      <form onSubmit={saveTask}>
+        <div className="task-content">
+          <div className="content-row">
+            <div className="task-caption">{NAME_TASK_TEXT}</div>
 
-        <div className="content-row">
-          <div className="caption-wrap">
-            <div className="task-caption">{FILE_TASK_TEXT}</div>
-            <label className="input-file">
-              <input
-                ref={fileInput}
-                type="file"
-                multiple
-                onChange={addFiles}
-                className="input-file"
-              />
-              <span>
-                {state.phase.type === "fileAdding" ? (
-                  <Preloader type="small" />
-                ) : (
-                  "выберите файл"
-                )}
-              </span>
-            </label>
+            <input
+              required={true}
+              ref={textInput}
+              type="text"
+              className="task-textinput"
+              defaultValue={state.currTask?.value?.name}
+            />
+          </div>
+          <div className="content-row">
+            <div className="task-caption">{DESC_TASK_TEXT}</div>
+            <textarea
+              ref={textArea}
+              className="task-textarea"
+              name="post"
+              id="input"
+              rows={10}
+              cols={40}
+              defaultValue={state.currTask?.value?.desc}
+            ></textarea>
+          </div>
+          <div className="content-row">
+            <div className="task-caption">{DATE_TASK_TEXT}</div>
+            <div>{"добавить дату завершения"}</div>
           </div>
 
-          <div className="fileList">{getFileList(state)}</div>
+          <div className="content-row">
+            <div className="caption-wrap">
+              <div className="task-caption">{FILE_TASK_TEXT}</div>
+              <label className="input-file">
+                <input
+                  ref={fileInput}
+                  type="file"
+                  multiple
+                  onChange={addFiles}
+                  className="input-file"
+                />
+                <span>
+                  {state.phase.type === "fileAdding" ? (
+                    <Preloader type="small" />
+                  ) : (
+                    "выберите файл"
+                  )}
+                </span>
+              </label>
+            </div>
+
+            <div className="fileList">{getFileList(state)}</div>
+          </div>
         </div>
-      </div>
-      <div className="bottom-panel">
-        <button className="control-button button-delete" onClick={deleteTask}>
-          delete
-        </button>
-        <button className="control-button button-save" onClick={saveTask}>
-          save
-        </button>
-      </div>
+        <div className="bottom-panel">
+          <button className="control-button button-delete" onClick={deleteTask}>
+            delete
+          </button>
+          <button type="submit" className="control-button button-save">
+            save
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
