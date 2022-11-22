@@ -28,10 +28,19 @@ export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
         <input type="checkbox" />
       </div>
       <div className="right-panel">
-        <div className="preview-title">{item.value.name}</div>
-        <div className="preview-description">{item.value.desc}</div>
+        <div>
+          <div className="preview-title">{item.value.name}</div>
+          <div className="preview-description">{item.value.desc}</div>
+        </div>
         <div className="preview-footer">
-          <div className="preview-date">{"здесь будет дата"}</div>
+          <div className="preview-date">
+            {item.value.endDate && (
+              <>
+                {item.value.endDate.date}
+                {item.value.endDate.time}
+              </>
+            )}
+          </div>
 
           <button onClick={(e) => deleteTask(e)}>delete</button>
         </div>

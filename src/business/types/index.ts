@@ -24,6 +24,10 @@ export type DataValueType = {
   name: string;
   desc: string;
   fileList?: FileItemList;
+  endDate: {
+    date: string;
+    time: string;
+  };
 };
 
 export type FileItemList = Array<FileItemType>;

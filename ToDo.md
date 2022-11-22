@@ -27,7 +27,9 @@
 - [x] заголовок, описание, дата завершения, прикрепленные файлы
 
 # other
-- [ ]separate preloader
+- [ ]separate preloader for file loading
+- [ ] min time and date
+
 
 
 

@@ -1,10 +1,11 @@
-import React, { useRef } from "react";
+import React, { FormEvent, FormEventHandler, useRef } from "react";
 
 import { Preloader } from "../Preloader";
 import { useAppContext } from "../../AppProvider";
 import { FileItemList, State } from "../../business/types";
 
 import "./index.less";
+import dayjs from "dayjs";
 
 const NAME_TASK_TEXT = "заголовок";
 const DESC_TASK_TEXT = "описание";
@@ -38,6 +39,13 @@ export const Task = () => {
   const textArea = useRef<HTMLTextAreaElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
+  const dateInput = useRef<HTMLInputElement>(null);
+  const timeInput = useRef<HTMLInputElement>(null);
+
+  const defaultData = dayjs().add(1, "day").format("YYYY-MM-DD");
+  const minData = dayjs().format("YYYY-MM-DD");
+  const defaultTime = dayjs().format("HH:mm");
+
   const closeModal = () => {
     dispatch({ type: "changeView" });
   };
@@ -46,12 +54,20 @@ export const Task = () => {
     dispatch({ type: "startedAddFile", payload: fileInput.current?.files });
   };
 
-  const saveTask = (e: SubmitEvent) => {
+  const saveTask = (e: FormEvent) => {
     e.preventDefault();
+    //TODO: выбирать, какие данные отправлять, убрать пустую строку
+
     const payloadCore = {
       name: textInput.current?.value as string,
       desc: textArea.current?.value as string,
+      endDate: {
+        date: dateInput.current?.value as string,
+        time: timeInput.current?.value as string,
+      },
     };
+
+    // console.log("payloadCore", payloadCore);
 
     const payloadWithFile = {
       fileList: state.currTask?.value?.fileList as FileItemList,
@@ -60,6 +76,8 @@ export const Task = () => {
     const newPayload = state.currTask?.value?.fileList
       ? Object.assign(payloadCore, payloadWithFile)
       : payloadCore;
+
+    console.log(dateInput?.current?.value, timeInput.current?.value);
 
     dispatch({
       type: "startedSaveTask",
@@ -111,7 +129,20 @@ export const Task = () => {
           </div>
           <div className="content-row">
             <div className="task-caption">{DATE_TASK_TEXT}</div>
-            <div>{"добавить дату завершения"}</div>
+            <div className="data-wrapper">
+              {/* TODO: можно добавить минимальную дату и время */}
+              <input
+                type="date"
+                ref={dateInput}
+                defaultValue={defaultData}
+                min={minData}
+              />
+              <input
+                type="time"
+                ref={timeInput}
+                defaultValue={defaultTime}
+              ></input>
+            </div>
           </div>
 
           <div className="content-row">
