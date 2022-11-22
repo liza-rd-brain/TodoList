@@ -46,8 +46,8 @@ export const Task = () => {
     dispatch({ type: "startedAddFile", payload: fileInput.current?.files });
   };
 
-  //TODO: fix assertion
-  const saveTask = () => {
+  const saveTask = (e: SubmitEvent) => {
+    e.preventDefault();
     const payloadCore = {
       name: textInput.current?.value as string,
       desc: textArea.current?.value as string,
