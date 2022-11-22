@@ -11,20 +11,11 @@ export function useCheckExpired() {
     dispatch,
   } = useAppContext();
 
-  const UPDATE_TIME = 3000;
-  // const UPDATE_TIME = 30000;
+  //   const UPDATE_TIME = 3000;
+  const UPDATE_TIME = 30000;
 
   const checkExpiration = () => {
     if (data) {
-      //   const newDataWithExpired = data.map((currItem) => {
-      //     const hasDate = currItem.value.endDate && currItem.value.endDate?.date;
-      //     if (hasDate) {
-      //       const isExpired = checkIsExpired(currItem.value.endDate as DateType);
-      //       return { ...currItem, isExpired };
-      //     } else {
-      //       return currItem;
-      //     }
-      //   });
       const newDataWithExpired = addExpire(data);
 
       dispatch({ type: "updateExpired", payload: newDataWithExpired });

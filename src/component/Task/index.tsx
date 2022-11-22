@@ -12,6 +12,7 @@ const NAME_TASK_TEXT = "заголовок";
 const DESC_TASK_TEXT = "описание";
 const DATE_TASK_TEXT = "дата завершения";
 const FILE_TASK_TEXT = "прикрепленные файлы";
+const MARK_TEXT = "просрочена";
 
 const getFileList = (state: State) => {
   const fileItemList = state.currTask?.value?.fileList;
@@ -40,36 +41,50 @@ export const Task = () => {
   const textArea = useRef<HTMLTextAreaElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
-  const dateInput = useRef<HTMLInputElement>(null);
-  const timeInput = useRef<HTMLInputElement>(null);
+  const minData = dayjs().format("YYYY-MM-DD");
 
-  const hasTimeInput = Boolean(
-    timeInput.current?.value || state.currTask?.value?.endDate?.time
-  );
-
-  const [needData, setNeedData] = useState(hasTimeInput);
-
-  console.log("needData", needData);
-
-  /* Если ввели время - дата обязательна! */
-  const switchNeedData = () => {
-    setNeedData(hasTimeInput);
+  type DateStateType = {
+    date?: string;
+    time?: string;
   };
 
-  const minData = dayjs().format("YYYY-MM-DD");
+  const initState: DateStateType = {
+    date: undefined,
+    time: undefined,
+  };
+
+  const [dateState, setDataState] = useState(() => {
+    return initState;
+  });
+
+  const saveDate = (e) => {
+    setDataState((prev) => {
+      return {
+        ...prev,
+        date: e.target.value,
+      };
+    });
+  };
+
+  const saveTime = (e) => {
+    e.preventDefault();
+    setDataState((prev) => {
+      return {
+        ...prev,
+        time: e.target.value,
+      };
+    });
+  };
 
   const closeModal = () => {
     dispatch({ type: "changeView" });
   };
 
-  const currDateRef = {
-    date: dateInput.current?.value as string,
-    time: timeInput.current?.value as string,
-  };
-
-  const dataExpired = dateInput.current?.value
-    ? checkIsExpired(currDateRef)
+  const dataExpired = dateState.date
+    ? checkIsExpired(dateState as { date: string; time?: string })
     : state.currTask?.isExpired;
+
+  console.log("dataExpired", dataExpired);
 
   const addFiles = () => {
     dispatch({ type: "startedAddFile", payload: fileInput.current?.files });
@@ -77,14 +92,13 @@ export const Task = () => {
 
   const saveTask = (e: FormEvent) => {
     e.preventDefault();
-    //TODO: выбирать, какие данные отправлять, убрать пустую строку
 
     const payloadCore = {
       name: textInput.current?.value as string,
       desc: textArea.current?.value as string,
       endDate: {
-        date: dateInput.current?.value as string,
-        time: timeInput.current?.value as string,
+        date: dateState.date || "",
+        time: dateState.time || "",
       },
     };
 
@@ -140,24 +154,29 @@ export const Task = () => {
             ></textarea>
           </div>
           <div className="content-row">
-            <div className="task-caption">{DATE_TASK_TEXT}</div>
+            <div className="task-caption">
+              {DATE_TASK_TEXT}
+              {dataExpired && <span className="date-mark">{MARK_TEXT}</span>}
+            </div>
 
             <div className="data-wrapper">
               {/* TODO: можно добавить минимальную дату и время */}
               <input
                 type="date"
-                ref={dateInput}
                 defaultValue={state.currTask?.value?.endDate?.date}
-                required={needData}
+                required={Boolean(dateState.time)}
                 min={minData}
+                onChange={saveDate}
               />
               <input
                 type="time"
-                ref={timeInput}
+                // ref={timeInput}
                 defaultValue={state.currTask?.value?.endDate?.time}
-                onChange={switchNeedData}
+                onChange={saveTime}
               ></input>
-              {dataExpired && <span className="date-mark">просрочена</span>}
+              {/* <button className="control-button button-save" onClick={saveDate}>
+                save
+              </button> */}
             </div>
           </div>
 
