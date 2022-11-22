@@ -11,15 +11,15 @@
 - [x] TypeScript?!?!
 # priority
 
-- [ ] required fields?! name?
-- [x] how to store files
-- [ ] One preloader  or progressBar for loading data
-- [ ] simple crud
-- [ ] Main Page: Header+List
 - [ ] work with date - dayjs, mark as done\expired
-- [ ] how to check isExpired
-- [ ] taskPreview in taskList
+- [ ] required fields?! name?
 - [ ] Done,delete to task
+- [ ] how to check isExpired
+- [x] how to store files
+- [x] One preloader  or progressBar for loading data
+- [x] simple crud
+- [x] Main Page: Header+List
+- [x] taskPreview in taskList
 
 
 

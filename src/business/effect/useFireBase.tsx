@@ -52,7 +52,8 @@ export function useFireBase() {
 
       case "!loadFile": {
         const prevFileList = currTask?.value?.fileList as FileItemList;
-        let fileList: FileItemList = currTask ? [...prevFileList] : [];
+        let fileList: FileItemList =
+          currTask && prevFileList ? [...prevFileList] : [];
 
         const data = doEffect.type === "!loadFile" ? doEffect.data : null;
         if (data) {
