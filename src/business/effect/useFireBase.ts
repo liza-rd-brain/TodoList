@@ -20,7 +20,9 @@ import {
 
 import { db, storage } from "../../firebase";
 import { useAppContext } from "../../AppProvider";
-import { DataValueType, FileItemList, FileItemType } from "../types";
+import { DataValueType, DateType, FileItemList, FileItemType } from "../types";
+import { checkIsExpired } from "../helpers/checkIsExpired";
+import { addExpire } from "../helpers";
 
 export function useFireBase() {
   const {
@@ -43,7 +45,12 @@ export function useFireBase() {
             value: doc.data() as DataValueType,
           }));
 
-          dispatch({ type: "loadedTaskList", payload: todoList });
+          //TODO: поправить тип хранить  в бд без отметки
+          const listWithMark = addExpire(todoList);
+
+          console.log(listWithMark);
+
+          dispatch({ type: "loadedTaskList", payload: listWithMark });
         });
         break;
 

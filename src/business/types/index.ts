@@ -18,16 +18,19 @@ export type DataTypeList = Array<DataType>;
 export type DataType = {
   id: string;
   value: DataValueType;
+  isExpired?: Boolean;
 };
 
 export type DataValueType = {
   name: string;
   desc?: string;
   fileList?: FileItemList;
-  endDate?: {
-    date: string;
-    time: string;
-  };
+  endDate?: Partial<DateType>;
+};
+
+export type DateType = {
+  date: string;
+  time?: string;
 };
 
 export type FileItemList = Array<FileItemType>;

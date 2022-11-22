@@ -6,6 +6,7 @@ import { FileItemList, State } from "../../business/types";
 
 import "./index.less";
 import dayjs from "dayjs";
+import { checkIsExpired } from "../../business/helpers/checkIsExpired";
 
 const NAME_TASK_TEXT = "заголовок";
 const DESC_TASK_TEXT = "описание";
@@ -55,21 +56,24 @@ export const Task = () => {
     setNeedData(hasTimeInput);
   };
 
-  const defaultData = dayjs().add(1, "day").format("YYYY-MM-DD");
   const minData = dayjs().format("YYYY-MM-DD");
-  const defaultTime = dayjs().format("HH:mm");
-
-  console.log(Boolean(timeInput.current?.value));
 
   const closeModal = () => {
     dispatch({ type: "changeView" });
   };
 
+  const currDateRef = {
+    date: dateInput.current?.value as string,
+    time: timeInput.current?.value as string,
+  };
+
+  const dataExpired = dateInput.current?.value
+    ? checkIsExpired(currDateRef)
+    : state.currTask?.isExpired;
+
   const addFiles = () => {
     dispatch({ type: "startedAddFile", payload: fileInput.current?.files });
   };
-
-  const getPayloadCore = ({ name, desc, endDate }) => {};
 
   const saveTask = (e: FormEvent) => {
     e.preventDefault();
@@ -83,15 +87,6 @@ export const Task = () => {
         time: timeInput.current?.value as string,
       },
     };
-
-    // const payloadCore = getPayloadCore({
-    //   name: textInput.current?.value,
-    //   desc: textArea.current?.value,
-    //   endDate: {
-    //     date: dateInput.current?.value as string,
-    //     time: timeInput.current?.value as string,
-    //   },
-    // });
 
     const payloadWithFile = {
       fileList: state.currTask?.value?.fileList as FileItemList,
@@ -162,6 +157,7 @@ export const Task = () => {
                 defaultValue={state.currTask?.value?.endDate?.time}
                 onChange={switchNeedData}
               ></input>
+              {dataExpired && <span className="date-mark">просрочена</span>}
             </div>
           </div>
 
