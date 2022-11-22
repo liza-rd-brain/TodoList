@@ -20,8 +20,13 @@ import {
 
 import { db, storage } from "../../firebase";
 import { useAppContext } from "../../AppProvider";
-import { DataValueType, DateType, FileItemList, FileItemType } from "../types";
-import { checkIsExpired } from "../helpers/checkIsExpired";
+import {
+  DataValueType,
+  DateType,
+  FileItemList,
+  FileItemType,
+  LoadedDataType,
+} from "../types";
 import { addExpire } from "../helpers";
 
 export function useFireBase() {
@@ -40,10 +45,13 @@ export function useFireBase() {
         );
 
         const unsubscribe = onSnapshot(currQuery, (querySnapshot) => {
-          const todoList = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            value: doc.data() as DataValueType,
-          }));
+          const todoList = querySnapshot.docs.map(
+            (doc) =>
+              ({
+                id: doc.id,
+                value: doc.data(),
+              } as LoadedDataType)
+          );
 
           //TODO: поправить тип хранить  в бд без отметки
           const listWithMark = addExpire(todoList);
@@ -113,6 +121,7 @@ export function useFireBase() {
       }
 
       case "!saveTask": {
+        console.log("saveTask", doEffect.data);
         try {
           addDoc(collection(db, "todo"), {
             ...doEffect.data,
@@ -127,11 +136,11 @@ export function useFireBase() {
       }
 
       case "!updateTask": {
-        const data = doEffect.data;
+        console.log("updateTask", doEffect.data);
         const currId = currTask?.id as string;
         const taskDocRef = doc(db, "todo", currId);
         try {
-          updateDoc(taskDocRef, data);
+          updateDoc(taskDocRef, doEffect.data);
         } catch (err) {
           console.log(err);
         }

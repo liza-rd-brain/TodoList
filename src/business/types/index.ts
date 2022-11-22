@@ -21,6 +21,8 @@ export type DataType = {
   isExpired?: Boolean;
 };
 
+export type LoadedDataType = Omit<DataType, "isExpired">;
+
 export type DataValueType = {
   name: string;
   desc?: string;
