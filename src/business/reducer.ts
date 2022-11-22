@@ -39,6 +39,7 @@ export const reducer = (
         case "changeView": {
           return changeView(state);
         }
+
         case "openedTask": {
           const newCurrTask = state.data?.find((item) => {
             return item.id === action.payload;
@@ -50,6 +51,16 @@ export const reducer = (
             phase: { type: "cardEditing" },
             currTask: newCurrTask,
           };
+
+          return newState;
+        }
+
+        case "updateExpired": {
+          const newState: State = {
+            ...state,
+            data: action.payload,
+          };
+          console.log("updateExpired", newState);
 
           return newState;
         }
@@ -85,6 +96,7 @@ export const reducer = (
 
           return newState;
         }
+
         case "endedDeleteTask": {
           const newState: State = {
             ...state,
@@ -92,6 +104,16 @@ export const reducer = (
             doEffect: { type: "!loadFireBase" },
             phase: { type: "waitingTaskList" },
           };
+          return newState;
+        }
+
+        case "updateExpired": {
+          const newState: State = {
+            ...state,
+            data: action.payload,
+          };
+          console.log("updateExpired", newState);
+
           return newState;
         }
       }
@@ -143,6 +165,16 @@ export const reducer = (
         case "startedDeleteTask": {
           return changeView(state);
         }
+
+        case "updateExpired": {
+          const newState: State = {
+            ...state,
+            data: action.payload,
+          };
+          console.log("updateExpired", newState);
+
+          return newState;
+        }
       }
     }
 
@@ -184,33 +216,19 @@ export const reducer = (
     }
 
     default: {
-      return state;
-      // switch (action.type) {
-      //   case "loadedTaskList": {
-      //     const newState: State = {
-      //       ...state,
-      //       data: action.payload,
-      //       view: "list",
-      //       phase: { type: "idle" },
-      //     };
+      switch (action.type) {
+        case "updateExpired": {
+          const newState: State = {
+            ...state,
+            data: action.payload,
+          };
+          console.log("updateExpired", newState);
 
-      //     return newState;
-      //   }
-
-      //   case "deleteTask": {
-      //     return state;
-      //   }
-
-      //   case "saveTask": {
-      //     return state;
-      //   }
-      //   case "checkDone": {
-      //     return state;
-      //   }
-
-      //   default:
-      //     return state;
-      // }
+          return newState;
+        }
+        default:
+          return state;
+      }
     }
   }
 };

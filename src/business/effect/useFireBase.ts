@@ -1,7 +1,4 @@
 import { useEffect } from "react";
-import { useAppContext } from "../../AppProvider";
-
-import { db, storage } from "../../firebase";
 import {
   collection,
   query,
@@ -18,9 +15,11 @@ import {
   ref,
   getDownloadURL,
   uploadBytesResumable,
-  UploadTask,
   uploadBytes,
 } from "firebase/storage";
+
+import { db, storage } from "../../firebase";
+import { useAppContext } from "../../AppProvider";
 import { DataValueType, FileItemList, FileItemType } from "../types";
 
 export function useFireBase() {

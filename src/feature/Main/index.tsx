@@ -5,7 +5,11 @@ import { TaskList } from "../TaskList";
 import { Task } from "../../component/Task";
 import { useAppContext } from "../../AppProvider";
 import { Preloader } from "../../component/Preloader";
-import { useClosePortal, useFireBase } from "../../business/effect";
+import {
+  useCheckExpired,
+  useClosePortal,
+  useFireBase,
+} from "../../business/effect";
 
 import "./index.less";
 
@@ -56,6 +60,7 @@ export function Main() {
 
   useFireBase();
   useClosePortal();
+  useCheckExpired();
 
   return (
     <div

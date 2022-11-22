@@ -22,9 +22,9 @@ export type DataType = {
 
 export type DataValueType = {
   name: string;
-  desc: string;
+  desc?: string;
   fileList?: FileItemList;
-  endDate: {
+  endDate?: {
     date: string;
     time: string;
   };
@@ -64,7 +64,8 @@ export type ActionType =
   | { type: "endedDeleteTask" }
   | { type: "saveTask" }
   | { type: "checkDone" }
-  | { type: "changeView" };
+  | { type: "changeView" }
+  | { type: "updateExpired"; payload: DataTypeList };
 
 // export type TodoItemType = {
 //   id: string;
