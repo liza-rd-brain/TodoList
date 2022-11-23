@@ -1,12 +1,19 @@
 import dayjs from "dayjs";
-import React, { BaseSyntheticEvent, FormEvent, useRef, useState } from "react";
+import React, {
+  BaseSyntheticEvent,
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { Preloader } from "../Preloader";
 import { useAppContext } from "../../AppProvider";
-import { DataType, DataValueType } from "../../business/types";
+import { DataType, DataValueType, FileItemList } from "../../business/types";
 import { checkIsExpired } from "../../business/helpers/checkIsExpired";
 
 import "./index.less";
+import { useLoadFile } from "../../business/effect/useLoadFile";
 
 const MARK_TEXT = "просрочена";
 const NAME_TASK_TEXT = "заголовок";
@@ -23,7 +30,11 @@ const SAVE_BUTTON_TEXT = "сохранить";
 const minData = dayjs().format("YYYY-MM-DD");
 
 export const Task = () => {
-  const { state, dispatch, refContainer } = useAppContext();
+  const { state, dispatch } = useAppContext();
+
+  const currRefContainer = useRef<{ fileList: FileItemList | [] }>({
+    fileList: [],
+  });
 
   const currTask = state.data?.find((item) => {
     return item.id === state.currTaskId;
@@ -33,8 +44,8 @@ export const Task = () => {
    * - if item already has file (we editing card), then paint them,
    * - if we create new task, check ref store for file
    */
-  const currFileList = refContainer.current.fileList.length
-    ? refContainer.current.fileList
+  const currFileList = currRefContainer.current.fileList.length
+    ? currRefContainer.current.fileList
     : currTask?.value?.fileList;
 
   /**
@@ -85,7 +96,7 @@ export const Task = () => {
    */
   const closeModal = () => {
     //clean up ref store when portal closed
-    refContainer.current.fileList = [];
+    currRefContainer.current.fileList = [];
     dispatch({ type: "changeView" });
   };
 
@@ -120,7 +131,7 @@ export const Task = () => {
     };
 
     //clean up ref store when portal closed
-    refContainer.current.fileList = [];
+    currRefContainer.current.fileList = [];
 
     const newPayload = Object.assign(payloadCore, payloadWithFile);
 
@@ -145,7 +156,7 @@ export const Task = () => {
    * emit dispatch that started delete task from list
    */
   const deleteTask = () => {
-    refContainer.current.fileList = [];
+    currRefContainer.current.fileList = [];
     dispatch({
       type: "startedDeleteTask",
       payload: state?.currTaskId,
@@ -182,6 +193,15 @@ export const Task = () => {
    * task cant be expired if it done
    */
   const taskExpired = dataExpired && !currTask?.value.isDone;
+
+  useLoadFile(currRefContainer);
+
+  useEffect(() => {
+    return () => {
+      console.log("clear currRefContainer ");
+      currRefContainer.current.fileList = [];
+    };
+  }, []);
 
   return (
     <div className="task-container" id="taskContainer">

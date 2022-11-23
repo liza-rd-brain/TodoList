@@ -14,12 +14,6 @@ export const AppContext = React.createContext<{
    *dispatcher for actions
    */
   dispatch: React.Dispatch<ActionType>;
-  /**
-   * mutable container for temporary storing
-   */
-  refContainer: React.MutableRefObject<{
-    fileList: FileItemList | [];
-  }>;
 }>(undefined as any);
 
 /**
@@ -28,7 +22,7 @@ export const AppContext = React.createContext<{
  *
  * - state- all app state
  * - dispatch - dispatcher for actions
- * - refContainer- mutable container for temporary storing
+
  */
 export const useAppContext = () => {
   const appContext = useContext(AppContext);

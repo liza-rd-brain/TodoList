@@ -35,6 +35,8 @@ const changeView = (state: State): State => {
  * @param state - application state
  * @param action - describe what to do and  with what data
  * @returns new application state
+ *
+ *  - when file loading can only delete task
  */
 export const reducer = (
   state: State = initialState,
