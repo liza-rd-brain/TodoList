@@ -38,6 +38,8 @@ export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
     });
   };
 
+  const taskExpired = item.isExpired && !item.value.isDone;
+
   return (
     <div className="preview-container" onClick={openTask}>
       <div className="left-panel">
@@ -61,7 +63,7 @@ export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
                 <span>{item.value.endDate.time}</span>
               </>
             )}
-            {item.isExpired && <span className="date-mark">просрочена</span>}
+            {taskExpired && <span className="date-mark">просрочена</span>}
           </div>
 
           <button onClick={(e) => deleteTask(e)}>delete</button>

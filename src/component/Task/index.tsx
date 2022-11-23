@@ -79,6 +79,8 @@ export const Task = () => {
     ? checkIsExpired(dateState as { date: string; time?: string })
     : state.currTask?.isExpired;
 
+  const taskExpired = dataExpired && !state.currTask?.value.isDone;
+
   const saveTask = (e: FormEvent) => {
     e.preventDefault();
 
@@ -186,7 +188,7 @@ export const Task = () => {
           <div className="content-row">
             <div className="task-caption">
               {DATE_TASK_TEXT}
-              {dataExpired && <span className="date-mark">{MARK_TEXT}</span>}
+              {taskExpired && <span className="date-mark">{MARK_TEXT}</span>}
             </div>
 
             <div className="data-wrapper">
