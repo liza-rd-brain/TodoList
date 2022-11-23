@@ -28,7 +28,7 @@ import { FileItemList, FileItemType, LoadedDataType } from "../types";
  */
 export function useFireBase() {
   const {
-    state: { doEffect, currTask },
+    state: { doEffect, currTaskId, data },
     dispatch,
     refContainer,
   } = useAppContext();
@@ -62,13 +62,14 @@ export function useFireBase() {
       }
 
       case "!loadFile": {
+        const currTask = data?.find((item) => item.id === currTaskId);
         const prevFileList = currTask?.value?.fileList as FileItemList;
         let currFileList: FileItemList =
           currTask && prevFileList ? [...prevFileList] : [];
 
-        const data = doEffect.type === "!loadFile" ? doEffect.data : null;
-        if (data) {
-          const newFileList = Object.values(data);
+        const dataLoaded = doEffect.type === "!loadFile" ? doEffect.data : null;
+        if (dataLoaded) {
+          const newFileList = Object.values(dataLoaded);
 
           try {
             const result = Promise.all<Promise<FileItemType>[]>(
@@ -128,7 +129,6 @@ export function useFireBase() {
       }
 
       case "!updateTask": {
-        // const currId = currTask?.id as string;
         const taskDocRef = doc(db, path, doEffect.data.id);
         try {
           updateDoc(taskDocRef, doEffect.data.taskItem);

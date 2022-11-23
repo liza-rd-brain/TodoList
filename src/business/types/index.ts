@@ -1,9 +1,10 @@
 export type State = {
-  data: DataTypeList | null;
+  data: null | DataTypeList;
   view: "list" | "card" | "loading";
   doEffect: EffectType;
   phase: PhaseType;
-  currTask: DataType | null;
+  currTaskId: string | null;
+  // currTask: DataType | null;
 };
 
 export type DataTypeList = Array<DataType>;
@@ -65,7 +66,7 @@ export type ActionType =
     }
   | { type: "endedSaveTask" }
   | { type: "openedTask"; payload: string }
-  | { type: "startedDeleteTask"; payload: string }
+  | { type: "startedDeleteTask"; payload: string | null }
   | { type: "endedDeleteTask" }
   | { type: "changeView" }
   | { type: "updateExpired"; payload: DataTypeList }

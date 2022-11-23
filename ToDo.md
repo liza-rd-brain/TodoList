@@ -11,10 +11,10 @@
 - [x] TypeScript?!?!
 # priority
 
-- [ ] work with date - dayjs, mark as done\expired
 - [ ] required fields?! name?
-- [ ] Done,delete to task
-- [ ] how to check isExpired
+- [x] work with date - dayjs, mark as done\expired
+- [x] Done,delete to task
+- [x] how to check isExpired
 - [x] how to store files
 - [x] One preloader  or progressBar for loading data
 - [x] simple crud

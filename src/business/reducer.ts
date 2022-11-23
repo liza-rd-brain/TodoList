@@ -5,7 +5,7 @@ export const initialState: State = {
   view: "loading",
   doEffect: { type: "!loadFireBase" },
   phase: { type: "waitingTaskList" },
-  currTask: null,
+  currTaskId: null,
 };
 
 /**
@@ -24,7 +24,7 @@ const changeView = (state: State): State => {
       ...state,
       view: "list",
       phase: { type: "previewCard" },
-      currTask: null,
+      currTaskId: null,
     };
     return newState;
   } else return state;
@@ -58,7 +58,7 @@ export const reducer = (
             ...state,
             view: "card",
             phase: { type: "cardEditing" },
-            currTask: newCurrTask,
+            currTaskId: newCurrTask.id,
           };
 
           return newState;
@@ -76,7 +76,7 @@ export const reducer = (
         case "startedDeleteTask": {
           const newState: State = {
             ...state,
-            doEffect: { type: "!deleteTask", data: action.payload },
+            doEffect: { type: "!deleteTask", data: action.payload as string },
           };
 
           return newState;
@@ -88,7 +88,7 @@ export const reducer = (
             view: "loading",
             doEffect: { type: "!loadFireBase" },
             phase: { type: "waitingTaskList" },
-            currTask: null,
+            currTaskId: null,
           };
           return newState;
         }
@@ -124,8 +124,9 @@ export const reducer = (
             };
 
             return newState;
+          } else {
+            return state;
           }
-          break;
         }
 
         case "endedSaveTask": {
@@ -143,6 +144,7 @@ export const reducer = (
             ...state,
             doEffect: { type: "!loadFile", data: action.payload as FileList },
           };
+
           return newState;
         }
 
@@ -158,7 +160,7 @@ export const reducer = (
         case "startedDeleteTask": {
           const newState: State = {
             ...state,
-            doEffect: { type: "!deleteTask", data: action.payload },
+            doEffect: { type: "!deleteTask", data: action.payload as string },
           };
 
           return newState;
@@ -170,7 +172,7 @@ export const reducer = (
             view: "loading",
             doEffect: { type: "!loadFireBase" },
             phase: { type: "waitingTaskList" },
-            currTask: null,
+            currTaskId: null,
           };
           return newState;
         }
@@ -185,7 +187,6 @@ export const reducer = (
         }
 
         case "startedChangeDone": {
-          debugger;
           if (!state.doEffect?.type) {
             const newState: State = {
               ...state,
@@ -194,6 +195,8 @@ export const reducer = (
             };
 
             return newState;
+          } else {
+            return state;
           }
         }
 
@@ -217,8 +220,9 @@ export const reducer = (
               doEffect: { type: "!saveTask", data: action.payload },
             };
             return newState;
+          } else {
+            return state;
           }
-          break;
         }
 
         case "endedSaveTask": {
@@ -305,7 +309,7 @@ export const reducer = (
           switch (newPhase) {
             case "cardEditing": {
               const newCurrTask = action.payload.find((item) => {
-                return item.id === state.currTask?.id;
+                return item.id === state.currTaskId;
               });
 
               const newState: State = {
@@ -314,7 +318,7 @@ export const reducer = (
                 view: "card",
                 phase: { type: newPhase },
                 doEffect: null,
-                currTask: newCurrTask || null,
+                currTaskId: newCurrTask?.id || null,
               };
 
               return newState;

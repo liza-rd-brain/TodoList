@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
-import React, { FormEvent, useRef, useState } from "react";
+import React, { BaseSyntheticEvent, FormEvent, useRef, useState } from "react";
 
 import { Preloader } from "../Preloader";
 import { useAppContext } from "../../AppProvider";
-import { DataValueType } from "../../business/types";
+import { DataType, DataValueType } from "../../business/types";
 import { checkIsExpired } from "../../business/helpers/checkIsExpired";
 
 import "./index.less";
@@ -25,13 +25,17 @@ const minData = dayjs().format("YYYY-MM-DD");
 export const Task = () => {
   const { state, dispatch, refContainer } = useAppContext();
 
+  const currTask = state.data?.find((item) => {
+    return item.id === state.currTaskId;
+  });
+
   /**
    * - if item already has file (we editing card), then paint them,
    * - if we create new task, check ref store for file
    */
   const currFileList = refContainer.current.fileList.length
     ? refContainer.current.fileList
-    : state.currTask?.value.fileList;
+    : currTask?.value?.fileList;
 
   /**
    * function that paint loaded file list
@@ -68,7 +72,9 @@ export const Task = () => {
     return initState;
   });
 
-  const saveDate = (e) => {
+  const saveDate = (
+    e: React.FormEvent<HTMLInputElement> & BaseSyntheticEvent
+  ) => {
     setDataState((prev) => {
       return { ...prev, [e.target.type]: e.target.value };
     });
@@ -127,7 +133,7 @@ export const Task = () => {
       /**
        * id edit card already have id!
        */
-      const currTaskId = state.currTask?.id as string;
+      const currTaskId = state.currTaskId as string;
       dispatch({
         type: "startedEditTask",
         payload: { taskItem: newPayload, id: currTaskId },
@@ -142,36 +148,40 @@ export const Task = () => {
     refContainer.current.fileList = [];
     dispatch({
       type: "startedDeleteTask",
-      payload: state.currTask?.id as string,
+      payload: state?.currTaskId,
     });
   };
 
   /**
    * emit dispatch that edit done task
+   * work only on card editing
    */
-  const changeTaskDone = (e) => {
+  const changeTaskDone = (e: React.FormEvent<HTMLInputElement>) => {
     e.stopPropagation();
-    const doneTask: DataValueType = {
-      ...(state.currTask?.value as DataValueType),
-      isDone: !state.currTask?.value.isDone,
-    };
 
-    const currTaskId = state.currTask?.id as string;
+    if (currTask) {
+      const doneTask: DataValueType = {
+        ...currTask.value,
+        isDone: !currTask.value.isDone,
+      };
 
-    dispatch({
-      type: "startedChangeDone",
-      payload: { taskItem: doneTask, id: currTaskId },
-    });
+      const currTaskId = currTask?.id as string;
+
+      dispatch({
+        type: "startedChangeDone",
+        payload: { taskItem: doneTask, id: currTaskId },
+      });
+    }
   };
 
   const dataExpired = dateState.date
     ? checkIsExpired(dateState as { date: string; time?: string })
-    : state.currTask?.isExpired;
+    : currTask?.isExpired;
 
   /**
    * task cant be expired if it done
    */
-  const taskExpired = dataExpired && !state.currTask?.value.isDone;
+  const taskExpired = dataExpired && !currTask?.value.isDone;
 
   return (
     <div className="task-container" id="taskContainer">
@@ -181,7 +191,7 @@ export const Task = () => {
             <>
               <input
                 type="checkbox"
-                checked={state.currTask?.value?.isDone}
+                checked={currTask?.value?.isDone}
                 onChange={changeTaskDone}
               />
               <span>{TASK_DONE_TEXT}</span>
@@ -201,7 +211,7 @@ export const Task = () => {
               ref={textInput}
               type="text"
               className="task-textinput"
-              defaultValue={state.currTask?.value?.name}
+              defaultValue={currTask?.value?.name}
             />
           </div>
           <div className="content-row">
@@ -213,7 +223,7 @@ export const Task = () => {
               id="input"
               rows={10}
               cols={40}
-              defaultValue={state.currTask?.value?.desc}
+              defaultValue={currTask?.value?.desc}
             ></textarea>
           </div>
           <div className="content-row">
@@ -226,14 +236,14 @@ export const Task = () => {
               {/* TODO: можно добавить минимальную дату и время */}
               <input
                 type="date"
-                defaultValue={state.currTask?.value?.endDate?.date}
+                defaultValue={currTask?.value?.endDate?.date}
                 required={Boolean(dateState.time)}
                 min={minData}
                 onChange={saveDate}
               />
               <input
                 type="time"
-                defaultValue={state.currTask?.value?.endDate?.time || undefined}
+                defaultValue={currTask?.value?.endDate?.time || undefined}
                 onChange={saveDate}
               ></input>
             </div>

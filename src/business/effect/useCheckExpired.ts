@@ -11,7 +11,7 @@ import { useAppContext } from "../../AppProvider";
  */
 export function useCheckExpired() {
   const {
-    state: { doEffect, currTask, data },
+    state: { doEffect, data },
     dispatch,
   } = useAppContext();
 

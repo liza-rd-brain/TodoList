@@ -23,6 +23,8 @@ const BUTTON_TEXT = "Add Task";
 export function Main() {
   const { state, dispatch } = useAppContext();
 
+  console.log(state);
+
   /**
    *
    * @param childNode  - optional portal element, create modal like window
