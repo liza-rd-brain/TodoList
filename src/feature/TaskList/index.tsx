@@ -11,13 +11,15 @@ import "./index.less";
  * @returns list of TaskPreview
  */
 export const TaskList: FC<{ list: DataTypeList | null }> = ({ list }) => {
-  if (list) {
+  if (list?.length) {
     return (
-      <div className="task-list-container">
+      <>
         {list.map((item, index) => {
           return <TaskPreview key={index} item={item} />;
         })}
-      </div>
+      </>
     );
-  } else return null;
+  } else {
+    return <div className="empty-list">{"здесь будет список задач"}</div>;
+  }
 };

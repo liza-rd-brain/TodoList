@@ -4,6 +4,8 @@ import { Main } from "./feature/Main";
 import { AppContext } from "./AppProvider";
 import { initialState, reducer } from "./business/reducer";
 
+import "./App.less";
+
 /**
  *Entry point of application
  * @returns jsx root

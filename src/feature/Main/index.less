@@ -1,5 +1,4 @@
-@app-primary: #dce1e7;
-@app-secondary: gold;
+@import "../../App.less";
 
 #app {
   width: 100%;
@@ -26,6 +25,7 @@
 
 .app-logo {
   height: 20px;
+  @font();
 }
 
 .app-logo {
@@ -35,29 +35,38 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: rgb(84, 28, 28);
+  // color: @dark-gray;
+  font-weight: 400;
 }
 
-.app-text {
-  color: @app-secondary;
-}
+.app-text {}
 
 .app-button {
-  width: 500px;
+  // width: 500px;
   height: 50px;
   font-size: 20px;
+  .button(@light-gray);
   /*   border-radius: 5px; */
 }
 
 .todo-list {
-/*   position: relative; */
   display: flex;
   width: 700px;
   flex-direction: column;
   gap: 20px;
   align-items: center;
-  margin: 100px auto auto;
+  margin: 5vh auto auto;
   background-color: #d3d3d34d;
   border-radius: 10px;
-  padding: 15px;
+  // padding: 15px;
+}
+
+.todo-header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  box-sizing: border-box;
+  background: @gray;
+  border-radius: 10px 10px 0 0;
+  padding: 10px 80px;
 }

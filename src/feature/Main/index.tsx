@@ -13,7 +13,8 @@ import {
 
 import "./index.less";
 
-const BUTTON_TEXT = "Add Task";
+const BUTTON_TEXT = "Добавить задачу";
+const LOGO_TEXT = "TODO";
 
 /**
  * Main - kinda page/features
@@ -32,11 +33,15 @@ export function Main() {
     return (
       <div className="todo-list" id="listTask">
         {childNode ? childNode : null}
-        <div className="app-logo">TODO</div>
-        <button className="app-button" onClick={(e) => createTask(e)}>
-          {BUTTON_TEXT}
-        </button>
-        <TaskList list={state.data} />
+        <div className="todo-header">
+          <div className="app-logo">{LOGO_TEXT}</div>
+          <button className="app-button" onClick={(e) => createTask(e)}>
+            {BUTTON_TEXT}
+          </button>
+        </div>
+        <div className="task-list-container">
+          <TaskList list={state.data} />
+        </div>
       </div>
     );
   };
