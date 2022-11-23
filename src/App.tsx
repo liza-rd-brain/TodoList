@@ -1,14 +1,19 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useRef } from "react";
 
 import { Main } from "./feature/Main";
 import { AppContext } from "./AppProvider";
 import { initialState, reducer } from "./business/reducer";
+import { FileItemList } from "./business/types";
 
 export function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const refContainer = useRef<{ fileList: FileItemList | [] }>({
+    fileList: [],
+  });
+
   return (
-    <AppContext.Provider value={{ state, dispatch }}>
+    <AppContext.Provider value={{ state, dispatch, refContainer }}>
       <Main />
     </AppContext.Provider>
   );

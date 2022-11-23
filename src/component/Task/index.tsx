@@ -1,8 +1,8 @@
-import React, { FormEvent, FormEventHandler, useRef, useState } from "react";
+import React, { FormEvent, useRef, useState } from "react";
 
 import { Preloader } from "../Preloader";
 import { useAppContext } from "../../AppProvider";
-import { DataType, FileItemList, State } from "../../business/types";
+import { DataValueType, FileItemList, State } from "../../business/types";
 
 import "./index.less";
 import dayjs from "dayjs";
@@ -14,32 +14,35 @@ const DATE_TASK_TEXT = "дата завершения";
 const FILE_TASK_TEXT = "прикрепленные файлы";
 const MARK_TEXT = "просрочена";
 
-const getFileList = (state: State) => {
-  const fileItemList = state.currTask?.value?.fileList;
-  if (fileItemList) {
-    return fileItemList.map((fileItem, index) => {
-      return (
-        <div key={index}>
-          <a href={fileItem?.link} target="blank">
-            {fileItem?.name}
-          </a>
-        </div>
-      );
-    });
-  } else return null;
-};
-
 export const Task = () => {
-  const { state, dispatch } = useAppContext();
-  const currTask = state.currTask;
-  /**
-   * В fileList можно добавить сразу несколько файлов
-   * Добавление новых не перезаписывает старые
-   */
-  /*   const fileList = useRef<Array<any>>([]); */
+  const { state, dispatch, refContainer } = useAppContext();
+
+  const currFileList = refContainer.current.fileList.length
+    ? refContainer.current.fileList
+    : state.currTask?.value.fileList;
+
+  console.log("currFileList", currFileList);
+  console.log("refContainer", refContainer.current.fileList);
+
+  const getFileList = () => {
+    if (currFileList) {
+      return currFileList.map((fileItem, index) => {
+        return (
+          <div key={index}>
+            <a href={fileItem?.link} target="blank">
+              {fileItem?.name}
+            </a>
+          </div>
+        );
+      });
+    } else return null;
+  };
+
   const textInput = useRef<HTMLInputElement>(null);
   const textArea = useRef<HTMLTextAreaElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
+
+  console.log("что лежит в файлах", fileInput.current);
 
   const minData = dayjs().format("YYYY-MM-DD");
 
@@ -57,30 +60,35 @@ export const Task = () => {
     return initState;
   });
 
-  console.log("dateState", dateState);
-
   const saveDate = (e) => {
     setDataState((prev) => {
       return { ...prev, [e.target.type]: e.target.value };
     });
   };
 
+  //TODO: очищаем реф
   const closeModal = () => {
+    //очищаем хранилище
+    refContainer.current.fileList = [];
     dispatch({ type: "changeView" });
+  };
+
+  //добавляем в реф
+  const addFiles = () => {
+    console.log("перед добавкой", refContainer.current.fileList);
+    console.log("добавили мы", fileInput.current?.files);
+
+    dispatch({
+      type: "startedAddFile",
+      payload: fileInput.current?.files as FileList,
+    });
   };
 
   const dataExpired = dateState.date
     ? checkIsExpired(dateState as { date: string; time?: string })
     : state.currTask?.isExpired;
 
-  console.log("dataExpired", dataExpired);
-
-  const addFiles = () => {
-    dispatch({
-      type: "startedAddFile",
-      payload: fileInput.current?.files as FileList,
-    });
-  };
+  // console.log("dataExpired", dataExpired);
 
   const saveTask = (e: FormEvent) => {
     e.preventDefault();
@@ -88,20 +96,30 @@ export const Task = () => {
     const payloadCore = {
       name: textInput.current?.value as string,
       desc: textArea.current?.value as string,
-      isDone: state.currTask?.value.isDone as boolean,
+      isDone: false,
       endDate: {
         date: dateState.date || "",
         time: dateState.time || "",
       },
     };
 
+    console.log("payloadCore", payloadCore);
+
+    //копируем чтобы не потерять значения из контейнера
     const payloadWithFile = {
-      fileList: state.currTask?.value?.fileList as FileItemList,
+      fileList: currFileList?.length ? currFileList : [],
     };
 
-    const newPayload = state.currTask?.value?.fileList
-      ? Object.assign(payloadCore, payloadWithFile)
-      : payloadCore;
+    console.log("payloadWithFile", currFileList);
+
+    // очищаем хранилище
+    refContainer.current.fileList = [];
+
+    console.log("payloadWithFile", payloadWithFile);
+
+    const newPayload = Object.assign(payloadCore, payloadWithFile);
+
+    console.log("newPayload", newPayload);
 
     dispatch({
       type: "startedSaveTask",
@@ -110,6 +128,7 @@ export const Task = () => {
   };
 
   const deleteTask = () => {
+    refContainer.current.fileList = [];
     dispatch({
       type: "startedDeleteTask",
       payload: state.currTask?.id as string,
@@ -117,17 +136,14 @@ export const Task = () => {
   };
 
   const makeTaskDone = () => {
-    const doneTask = {
-      ...state.currTask,
-      value: {
-        ...state.currTask?.value,
-        isDone: true,
-      },
+    const doneTask: DataValueType = {
+      ...(state.currTask?.value as DataValueType),
+      isDone: true,
     };
-    // dispatch({
-    //   type: "startedSaveTask",
-    //   payload: doneTask,
-    // });
+    dispatch({
+      type: "startedSaveTask",
+      payload: doneTask,
+    });
   };
 
   return (
@@ -199,8 +215,9 @@ export const Task = () => {
                   onChange={addFiles}
                   className="input-file"
                 />
+
                 <span>
-                  {state.phase.type === "fileAdding" ? (
+                  {state.doEffect?.type === "!loadFile" ? (
                     <Preloader type="small" />
                   ) : (
                     "выберите файл"
@@ -209,7 +226,7 @@ export const Task = () => {
               </label>
             </div>
 
-            <div className="fileList">{getFileList(state)}</div>
+            <div className="fileList">{getFileList()}</div>
           </div>
         </div>
         <div className="bottom-panel">

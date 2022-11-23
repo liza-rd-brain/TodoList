@@ -15,19 +15,11 @@ export type State = {
 
 export type DataTypeList = Array<DataType>;
 
-export type DataTypePartial = {
-  id: string;
-  value: DataValueTypePartial;
-  isExpired: boolean;
-};
-
 export type DataType = {
   id: string;
-  value: DataValueType | DataValueTypePartial;
+  value: DataValueType;
   isExpired: boolean;
 };
-
-export type DataValueTypePartial = Partial<DataValueType>;
 
 export type LoadedDataType = Omit<DataType, "isExpired">;
 
@@ -48,10 +40,6 @@ export type FileItemList = Array<FileItemType>;
 
 export type FileItemType = { name: string; type: string; link: string };
 
-export type TaskType = {
-  fileList: FileItemList;
-} | null;
-
 export type EffectType =
   | { type: "!loadFireBase" }
   | { type: "!loadFile"; data: FileList }
@@ -64,13 +52,13 @@ export type PhaseType =
   | { type: "waitingTaskList" }
   | { type: "cardCreating" }
   | { type: "cardEditing" }
-  | { type: "fileAdding" }
+  // | { type: "fileAdding" }
   | { type: "idle" };
 
 export type ActionType =
   | { type: "loadedTaskList"; payload: DataTypeList }
   | { type: "startedAddFile"; payload: FileList | null | undefined }
-  | { type: "endedAddFile"; payload: FileItemList }
+  | { type: "endedAddFile" /* ; payload: FileItemList */ }
   | { type: "startedSaveTask"; payload: DataValueType }
   | { type: "endedSaveTask" }
   | { type: "openedTask"; payload: string }

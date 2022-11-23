@@ -18,21 +18,16 @@ import {
   uploadBytes,
 } from "firebase/storage";
 
+import { addExpire } from "../helpers";
 import { db, storage } from "../../firebase";
 import { useAppContext } from "../../AppProvider";
-import {
-  DataValueType,
-  DateType,
-  FileItemList,
-  FileItemType,
-  LoadedDataType,
-} from "../types";
-import { addExpire } from "../helpers";
+import { FileItemList, FileItemType, LoadedDataType } from "../types";
 
 export function useFireBase() {
   const {
     state: { doEffect, currTask },
     dispatch,
+    refContainer,
   } = useAppContext();
 
   useEffect(() => {
@@ -71,7 +66,7 @@ export function useFireBase() {
 
       case "!loadFile": {
         const prevFileList = currTask?.value?.fileList as FileItemList;
-        let fileList: FileItemList =
+        let currFileList: FileItemList =
           currTask && prevFileList ? [...prevFileList] : [];
 
         const data = doEffect.type === "!loadFile" ? doEffect.data : null;
@@ -102,11 +97,17 @@ export function useFireBase() {
 
             result.then(
               (res: FileItemList) => {
-                fileList.push(...res);
+                console.log("before res", refContainer);
+                console.log("currFileList", currFileList);
+
+                refContainer.current.fileList = refContainer.current.fileList
+                  ? [...refContainer.current.fileList, ...res, ...currFileList]
+                  : res;
+
+                console.log("after res", refContainer);
 
                 dispatch({
                   type: "endedAddFile",
-                  payload: fileList,
                 });
               },
               (err) => {
@@ -122,6 +123,7 @@ export function useFireBase() {
 
       case "!saveTask": {
         console.log("saveTask", doEffect.data);
+
         try {
           addDoc(collection(db, "todo"), {
             ...doEffect.data,

@@ -1,10 +1,13 @@
 import React from "react";
 import { useContext } from "react";
-import { ActionType, State } from "./business/types";
+import { ActionType, FileItemList, State } from "./business/types";
 
 export const AppContext = React.createContext<{
   state: State;
   dispatch: React.Dispatch<ActionType>;
+  refContainer: React.MutableRefObject<{
+    fileList: FileItemList | [];
+  }>;
 }>(undefined as any);
 
 export const useAppContext = () => {

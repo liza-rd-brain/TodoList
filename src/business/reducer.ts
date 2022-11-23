@@ -1,3 +1,4 @@
+import { useAppContext } from "../AppProvider";
 import { ActionType, DataType, State } from "./types";
 
 export const initialState: State = {
@@ -69,12 +70,16 @@ export const reducer = (
     case "cardEditing": {
       switch (action.type) {
         case "startedSaveTask": {
-          const newState: State = {
-            ...state,
-            doEffect: { type: "!updateTask", data: action.payload },
-          };
+          //сохраняем задачу, если закончилась загрузка файлов
+          if (!state.doEffect?.type) {
+            const newState: State = {
+              ...state,
+              doEffect: { type: "!updateTask", data: action.payload },
+            };
 
-          return newState;
+            return newState;
+          }
+          break;
         }
 
         case "endedSaveTask": {
@@ -84,6 +89,23 @@ export const reducer = (
             doEffect: { type: "!loadFireBase" },
             phase: { type: "waitingTaskList" },
           };
+          return newState;
+        }
+        case "startedAddFile": {
+          const newState: State = {
+            ...state,
+            doEffect: { type: "!loadFile", data: action.payload as FileList },
+            // phase: { type: "fileAdding" },
+          };
+          return newState;
+        }
+
+        case "endedAddFile": {
+          const newState: State = {
+            ...state,
+            doEffect: null,
+          };
+
           return newState;
         }
 
@@ -102,6 +124,7 @@ export const reducer = (
             view: "loading",
             doEffect: { type: "!loadFireBase" },
             phase: { type: "waitingTaskList" },
+            currTask: null,
           };
           return newState;
         }
@@ -119,21 +142,16 @@ export const reducer = (
 
     case "cardCreating": {
       switch (action.type) {
-        case "startedAddFile": {
-          const newState: State = {
-            ...state,
-            doEffect: { type: "!loadFile", data: action.payload as FileList },
-            phase: { type: "fileAdding" },
-          };
-          return newState;
-        }
-
         case "startedSaveTask": {
-          const newState: State = {
-            ...state,
-            doEffect: { type: "!saveTask", data: action.payload },
-          };
-          return newState;
+          //сохраняем задачу, если закончилась загрузка файлов
+          if (!state.doEffect?.type) {
+            const newState: State = {
+              ...state,
+              doEffect: { type: "!saveTask", data: action.payload },
+            };
+            return newState;
+          }
+          break;
         }
 
         case "endedSaveTask": {
@@ -146,12 +164,18 @@ export const reducer = (
           return newState;
         }
 
+        case "startedAddFile": {
+          const newState: State = {
+            ...state,
+            doEffect: { type: "!loadFile", data: action.payload as FileList },
+          };
+          return newState;
+        }
+
         case "endedAddFile": {
           const newState: State = {
             ...state,
             doEffect: null,
-            view: "list",
-            currTask: null,
           };
           return newState;
         }
@@ -175,26 +199,30 @@ export const reducer = (
       }
     }
 
-    case "fileAdding": {
+    /*   case "fileAdding": {
       switch (action.type) {
         case "endedAddFile": {
           const newState: State = {
             ...state,
-            currTask: {
-              ...(state.currTask as DataType),
-              value: {
-                ...state.currTask?.value,
-                name: "",
+            doEffect: null,
 
-                fileList: action.payload,
-              },
-            },
+            // currTask: {
+            //   ...state.currTask,
+            //   value: {
+            //     ...state.currTask?.value,
+            //     name: state.currTask?.value.name || "",
+            //     desc: state.currTask?.value.desc || "",
+            //     fileList: action.payload,
+            //     isDone: false,
+            //     endDate: null,
+            //   },
+            // },
           };
 
           return newState;
         }
       }
-    }
+    } */
 
     case "waitingTaskList": {
       switch (action.type) {
