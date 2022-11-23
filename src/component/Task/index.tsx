@@ -1,26 +1,41 @@
+import dayjs from "dayjs";
 import React, { FormEvent, useRef, useState } from "react";
 
 import { Preloader } from "../Preloader";
 import { useAppContext } from "../../AppProvider";
-import { DataValueType, FileItemList, State } from "../../business/types";
-
-import "./index.less";
-import dayjs from "dayjs";
+import { DataValueType } from "../../business/types";
 import { checkIsExpired } from "../../business/helpers/checkIsExpired";
 
+import "./index.less";
+
+const MARK_TEXT = "просрочена";
 const NAME_TASK_TEXT = "заголовок";
 const DESC_TASK_TEXT = "описание";
 const DATE_TASK_TEXT = "дата завершения";
 const FILE_TASK_TEXT = "прикрепленные файлы";
-const MARK_TEXT = "просрочена";
+
+const ADD_FILE_TASK = "выберите файл";
+const TASK_DONE_TEXT = "завершить задачу";
+
+const DELETE_BUTTON_TEXT = "удалить";
+const SAVE_BUTTON_TEXT = "сохранить";
+
+const minData = dayjs().format("YYYY-MM-DD");
 
 export const Task = () => {
   const { state, dispatch, refContainer } = useAppContext();
 
+  /**
+   * - if item already has file (we editing card), then paint them,
+   * - if we create new task, check ref store for file
+   */
   const currFileList = refContainer.current.fileList.length
     ? refContainer.current.fileList
     : state.currTask?.value.fileList;
 
+  /**
+   * function that paint loaded file list
+   */
   const getFileList = () => {
     if (currFileList) {
       return currFileList.map((fileItem, index) => {
@@ -38,8 +53,6 @@ export const Task = () => {
   const textInput = useRef<HTMLInputElement>(null);
   const textArea = useRef<HTMLTextAreaElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
-
-  const minData = dayjs().format("YYYY-MM-DD");
 
   type DateStateType = {
     date: string | null;
@@ -61,13 +74,18 @@ export const Task = () => {
     });
   };
 
+  /**
+   * emit dispatch that close task card
+   */
   const closeModal = () => {
-    //очищаем хранилище
+    //clean up ref store when portal closed
     refContainer.current.fileList = [];
     dispatch({ type: "changeView" });
   };
 
-  //добавляем в реф
+  /**
+   * emit dispatch that started add file
+   */
   const addFiles = () => {
     dispatch({
       type: "startedAddFile",
@@ -75,12 +93,9 @@ export const Task = () => {
     });
   };
 
-  const dataExpired = dateState.date
-    ? checkIsExpired(dateState as { date: string; time?: string })
-    : state.currTask?.isExpired;
-
-  const taskExpired = dataExpired && !state.currTask?.value.isDone;
-
+  /**
+   * emit dispatch that started save task
+   */
   const saveTask = (e: FormEvent) => {
     e.preventDefault();
 
@@ -94,16 +109,14 @@ export const Task = () => {
       },
     };
 
-    //копируем чтобы не потерять значения из контейнера
     const payloadWithFile = {
       fileList: currFileList?.length ? currFileList : [],
     };
 
-    // очищаем хранилище
+    //clean up ref store when portal closed
     refContainer.current.fileList = [];
 
     const newPayload = Object.assign(payloadCore, payloadWithFile);
-    const currTaskId = state.currTask?.id as string;
 
     if (state.phase.type === "cardCreating") {
       dispatch({
@@ -111,6 +124,10 @@ export const Task = () => {
         payload: newPayload,
       });
     } else if (state.phase.type === "cardEditing") {
+      /**
+       * id edit card already have id!
+       */
+      const currTaskId = state.currTask?.id as string;
       dispatch({
         type: "startedEditTask",
         payload: { taskItem: newPayload, id: currTaskId },
@@ -118,6 +135,9 @@ export const Task = () => {
     }
   };
 
+  /**
+   * emit dispatch that started delete task from list
+   */
   const deleteTask = () => {
     refContainer.current.fileList = [];
     dispatch({
@@ -126,21 +146,32 @@ export const Task = () => {
     });
   };
 
-  const makeTaskDone = (e) => {
+  /**
+   * emit dispatch that edit done task
+   */
+  const changeTaskDone = (e) => {
     e.stopPropagation();
     const doneTask: DataValueType = {
       ...(state.currTask?.value as DataValueType),
       isDone: !state.currTask?.value.isDone,
     };
-    const currTaskId = state.currTask?.id as string;
 
-    console.log("startedChangeDone", !state.currTask?.value.isDone);
+    const currTaskId = state.currTask?.id as string;
 
     dispatch({
       type: "startedChangeDone",
       payload: { taskItem: doneTask, id: currTaskId },
     });
   };
+
+  const dataExpired = dateState.date
+    ? checkIsExpired(dateState as { date: string; time?: string })
+    : state.currTask?.isExpired;
+
+  /**
+   * task cant be expired if it done
+   */
+  const taskExpired = dataExpired && !state.currTask?.value.isDone;
 
   return (
     <div className="task-container" id="taskContainer">
@@ -151,9 +182,9 @@ export const Task = () => {
               <input
                 type="checkbox"
                 checked={state.currTask?.value?.isDone}
-                onChange={makeTaskDone}
+                onChange={changeTaskDone}
               />
-              <span>завершить задачу</span>
+              <span>{TASK_DONE_TEXT}</span>
             </>
           )}
         </div>
@@ -224,7 +255,7 @@ export const Task = () => {
                   {state.doEffect?.type === "!loadFile" ? (
                     <Preloader type="small" />
                   ) : (
-                    "выберите файл"
+                    ADD_FILE_TASK
                   )}
                 </span>
               </label>
@@ -235,10 +266,10 @@ export const Task = () => {
         </div>
         <div className="bottom-panel">
           <button className="control-button button-delete" onClick={deleteTask}>
-            delete
+            {DELETE_BUTTON_TEXT}
           </button>
           <button type="submit" className="control-button button-save">
-            save
+            {SAVE_BUTTON_TEXT}
           </button>
         </div>
       </form>

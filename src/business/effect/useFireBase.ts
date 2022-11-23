@@ -48,7 +48,6 @@ export function useFireBase() {
               } as LoadedDataType)
           );
 
-          //TODO: поправить тип хранить  в бд без отметки
           const listWithMark = addExpire(todoList);
 
           dispatch({ type: "loadedTaskList", payload: listWithMark });

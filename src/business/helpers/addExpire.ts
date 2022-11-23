@@ -1,11 +1,5 @@
-import {
-  DataTypeList,
-  DataType,
-  DataValueType,
-  DateType,
-  LoadedDataType,
-} from "../types";
 import { checkIsExpired } from "./checkIsExpired";
+import { DataTypeList, DataType, DateType, LoadedDataType } from "../types";
 
 /**
  *

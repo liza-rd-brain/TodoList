@@ -6,8 +6,17 @@ import { ActionType, FileItemList, State } from "./business/types";
  * create context for application
  */
 export const AppContext = React.createContext<{
+  /**
+   * entire application state
+   */
   state: State;
+  /**
+   *dispatcher for actions
+   */
   dispatch: React.Dispatch<ActionType>;
+  /**
+   * mutable container for temporary storing
+   */
   refContainer: React.MutableRefObject<{
     fileList: FileItemList | [];
   }>;

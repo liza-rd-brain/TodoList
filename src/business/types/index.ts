@@ -1,5 +1,3 @@
-import { DocumentData } from "firebase/firestore";
-
 export type State = {
   data: DataTypeList | null;
   view: "list" | "card" | "loading";
@@ -7,11 +5,6 @@ export type State = {
   phase: PhaseType;
   currTask: DataType | null;
 };
-
-//Хэлпер для рекурсивных необязательных полей
-// type RecursivePartial<T> = {
-//   [P in keyof T]?: RecursivePartial<T[P]>;
-// };
 
 export type DataTypeList = Array<DataType>;
 

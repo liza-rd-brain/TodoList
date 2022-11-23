@@ -1,4 +1,3 @@
-import { useAppContext } from "../AppProvider";
 import { ActionType, DataType, PhaseInnerType, State } from "./types";
 
 export const initialState: State = {
@@ -9,6 +8,9 @@ export const initialState: State = {
   currTask: null,
 };
 
+/**
+ * switch view between `list` and `card`
+ */
 const changeView = (state: State): State => {
   if (state.view === "list") {
     const newState: State = {
@@ -28,12 +30,17 @@ const changeView = (state: State): State => {
   } else return state;
 };
 
+/**
+ *
+ * @param state - application state
+ * @param action - describe what to do and  with what data
+ * @returns new application state
+ */
 export const reducer = (
   state: State = initialState,
   action: ActionType
 ): State => {
   const [phaseOuter, phaseInner] = state.phase.type.split(".");
-  // const phase = state.phase.type;
 
   switch (phaseOuter) {
     case "previewCard": {
@@ -87,7 +94,6 @@ export const reducer = (
         }
 
         case "startedChangeDone": {
-          debugger;
           if (!state.doEffect?.type) {
             const newState: State = {
               ...state,
@@ -204,7 +210,7 @@ export const reducer = (
     case "cardCreating": {
       switch (action.type) {
         case "startedSaveTask": {
-          //сохраняем задачу, если закончилась загрузка файлов
+          //save task only if ended file loading
           if (!state.doEffect?.type) {
             const newState: State = {
               ...state,
@@ -258,18 +264,6 @@ export const reducer = (
           return newState;
         }
 
-        // case "startedChangeDone": {
-        //   if (!state.doEffect?.type) {
-        //     const newState: State = {
-        //       ...state,
-        //       doEffect: { type: "!updateTask", data: action.payload },
-        //       phase: { type: "doneEditing.cardCreating" },
-        //     };
-
-        //     return newState;
-        //   }
-        // }
-
         default: {
           return state;
         }
@@ -306,16 +300,13 @@ export const reducer = (
         }
 
         case "loadedTaskList": {
-          console.log("мы сейчас в ", state.phase);
           const newPhase = phaseInner as PhaseInnerType;
-          debugger;
+
           switch (newPhase) {
             case "cardEditing": {
               const newCurrTask = action.payload.find((item) => {
                 return item.id === state.currTask?.id;
               });
-
-              console.log("newCurrTask", newCurrTask);
 
               const newState: State = {
                 ...state,
@@ -361,8 +352,6 @@ export const reducer = (
           const newState: State = {
             ...state,
             data: action.payload,
-            // view: "list",
-            // phase: { type: "previewCard" },
             doEffect: null,
           };
 

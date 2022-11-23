@@ -1,11 +1,16 @@
 import React, { FC } from "react";
+
 import { useAppContext } from "../../AppProvider";
 import { DataType, DataValueType } from "../../business/types";
+
 import "./index.less";
 
 export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
-  const { state, dispatch } = useAppContext();
+  const { dispatch } = useAppContext();
 
+  /**
+   * emit dispatch that started delete task from list
+   */
   const deleteTask = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.stopPropagation();
     dispatch({
@@ -14,6 +19,9 @@ export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
     });
   };
 
+  /**
+   * emit dispatch that open task card
+   */
   const openTask = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.stopPropagation();
 
@@ -23,14 +31,15 @@ export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
     });
   };
 
-  const makeTaskDone = (e) => {
+  /**
+   * emit dispatch that edit done task
+   */
+  const changeTaskDone = (e) => {
     e.stopPropagation();
     const doneTask: DataValueType = {
       ...item.value,
       isDone: !item.value.isDone,
     };
-
-    console.log("startedChangeDone", doneTask);
 
     dispatch({
       type: "startedChangeDone",
@@ -38,6 +47,9 @@ export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
     });
   };
 
+  /**
+   * task cant be expired if it done
+   */
   const taskExpired = item.isExpired && !item.value.isDone;
 
   return (
@@ -46,7 +58,7 @@ export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
         <input
           type="checkbox"
           checked={item.value.isDone}
-          onChange={makeTaskDone}
+          onChange={changeTaskDone}
           onClick={(e) => e.stopPropagation()}
         />
       </div>

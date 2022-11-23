@@ -18,7 +18,6 @@ export function useClosePortal() {
     if (!withinBoundaries) {
       //clean up ref store when portal closed
       refContainer.current.fileList = [];
-
       dispatch({ type: "changeView" });
     }
   };
