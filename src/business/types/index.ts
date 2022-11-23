@@ -28,12 +28,12 @@ export type DataValueType = {
   desc: string;
   isDone: boolean;
   fileList?: FileItemList | null;
-  endDate: Partial<DateType> | null;
+  endDate: DateType;
 };
 
 export type DateType = {
   date: string;
-  time: string | null;
+  time?: string;
 };
 
 export type FileItemList = Array<FileItemType>;

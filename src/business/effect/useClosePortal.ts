@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useAppContext } from "../../AppProvider";
 
+/**
+ * hook for closing portal on click outside
+ */
 export function useClosePortal() {
   const {
     state: { view },
@@ -13,7 +16,7 @@ export function useClosePortal() {
 
     const withinBoundaries = e.composedPath().includes(container);
     if (!withinBoundaries) {
-      //очищаем хранилище при закрытии окна задачи
+      //clean up ref store when portal closed
       refContainer.current.fileList = [];
 
       dispatch({ type: "changeView" });

@@ -2,6 +2,9 @@ import React from "react";
 import { useContext } from "react";
 import { ActionType, FileItemList, State } from "./business/types";
 
+/**
+ * create context for application
+ */
 export const AppContext = React.createContext<{
   state: State;
   dispatch: React.Dispatch<ActionType>;
@@ -10,6 +13,14 @@ export const AppContext = React.createContext<{
   }>;
 }>(undefined as any);
 
+/**
+ *
+ * @returns application context
+ *
+ * - state- all app state
+ * - dispatch - dispatcher for actions
+ * - refContainer- mutable container for temporary storing
+ */
 export const useAppContext = () => {
   const appContext = useContext(AppContext);
 

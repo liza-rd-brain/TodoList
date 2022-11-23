@@ -1,23 +1,28 @@
-import dayjs from "dayjs";
 import { useEffect } from "react";
 import { useAppContext } from "../../AppProvider";
 import { addExpire } from "../helpers";
-import { checkIsExpired } from "../helpers/checkIsExpired";
-import { DataType, DateType } from "../types";
 
+/**
+ * hook for updating expired condition
+ * fired onсe in five second if has task, that may be expired:
+ * - have date (and time) expiration
+ * - dont have isDone mark as true
+ * - or dont have isExpired mark as true
+ */
 export function useCheckExpired() {
   const {
     state: { doEffect, currTask, data },
     dispatch,
   } = useAppContext();
 
-  //   const UPDATE_TIME = 3000;
-  const UPDATE_TIME = 30000;
+  const UPDATE_TIME = 5000;
 
-  const checkExpiration = () => {
+  /**
+   * if has task in list run check for expiration data
+   */
+  const checkExpiration = (): void => {
     if (data) {
       const newDataWithExpired = addExpire(data);
-
       dispatch({ type: "updateExpired", payload: newDataWithExpired });
     }
     return;
@@ -25,8 +30,10 @@ export function useCheckExpired() {
 
   useEffect(() => {
     const hasNotExpiredTask = data?.find(
-      (item) => !item.isExpired && item.value.endDate?.date
+      (item) =>
+        !item.isExpired && item.value.endDate?.date && !item.value.isDone
     );
+
     if (!doEffect && data?.length && hasNotExpiredTask) {
       const interval = setInterval(checkExpiration, UPDATE_TIME);
 

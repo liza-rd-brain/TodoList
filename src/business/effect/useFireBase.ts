@@ -19,10 +19,13 @@ import {
 } from "firebase/storage";
 
 import { addExpire } from "../helpers";
-import { db, storage } from "../../firebase";
+import { db, storage, path } from "../../firebase";
 import { useAppContext } from "../../AppProvider";
 import { FileItemList, FileItemType, LoadedDataType } from "../types";
 
+/**
+ * hook for interaction with firebase
+ */
 export function useFireBase() {
   const {
     state: { doEffect, currTask },
@@ -32,12 +35,9 @@ export function useFireBase() {
 
   useEffect(() => {
     switch (doEffect?.type) {
-      /* Автоматически подтягивает данные из бд */
+      // automatically pull data when bd update
       case "!loadFireBase": {
-        const currQuery = query(
-          collection(db, "todo"),
-          orderBy("creationDate")
-        );
+        const currQuery = query(collection(db, path), orderBy("creationDate"));
 
         const unsubscribe = onSnapshot(currQuery, (querySnapshot) => {
           const todoList = querySnapshot.docs.map(
@@ -116,7 +116,7 @@ export function useFireBase() {
 
       case "!saveTask": {
         try {
-          addDoc(collection(db, "todo"), {
+          addDoc(collection(db, path), {
             ...doEffect.data,
             creationDate: Timestamp.now(),
           });
@@ -130,7 +130,7 @@ export function useFireBase() {
 
       case "!updateTask": {
         // const currId = currTask?.id as string;
-        const taskDocRef = doc(db, "todo", doEffect.data.id);
+        const taskDocRef = doc(db, path, doEffect.data.id);
         try {
           updateDoc(taskDocRef, doEffect.data.taskItem);
         } catch (err) {
@@ -141,7 +141,7 @@ export function useFireBase() {
       }
 
       case "!deleteTask": {
-        const taskDocRef = doc(db, "todo", doEffect.data);
+        const taskDocRef = doc(db, path, doEffect.data);
         try {
           deleteDoc(taskDocRef);
         } catch (err) {

@@ -15,10 +15,19 @@ import "./index.less";
 
 const BUTTON_TEXT = "Add Task";
 
+/**
+ * Main - kinda page/features
+ * represent all application view
+ * @returns application page
+ */
 export function Main() {
   const { state, dispatch } = useAppContext();
-  console.log("state", state);
 
+  /**
+   *
+   * @param childNode  - optional portal element, create modal like window
+   * @returns container with task list
+   */
   const getTaskList = (childNode?: React.ReactPortal) => {
     return (
       <div className="todo-list" id="listTask">
@@ -32,6 +41,13 @@ export function Main() {
     );
   };
 
+  /**
+   * Function for view determination, can be:
+   * - preloader
+   * - list
+   * - list with portal
+   * @returns view depends on `state.view`
+   */
   const getView = () => {
     switch (state.view) {
       case "loading": {
@@ -53,6 +69,10 @@ export function Main() {
     }
   };
 
+  /**
+   * Emit action `create task`, open modal window
+   * @param e - click event
+   */
   const createTask = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.stopPropagation();
     dispatch({ type: "changeView" });

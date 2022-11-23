@@ -5,6 +5,11 @@ import { AppContext } from "./AppProvider";
 import { initialState, reducer } from "./business/reducer";
 import { FileItemList } from "./business/types";
 
+/**
+ *Entry point of application
+ * @returns jsx root
+ */
+
 export function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
