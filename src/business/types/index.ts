@@ -66,6 +66,10 @@ export type ActionType =
   | { type: "startedAddFile"; payload: FileList | null | undefined }
   | { type: "endedAddFile" }
   | { type: "startedSaveTask"; payload: DataValueType }
+  | {
+      type: "startedEditTask";
+      payload: { taskItem: DataValueType; id: string };
+    }
   | { type: "endedSaveTask" }
   | { type: "openedTask"; payload: string }
   | { type: "startedDeleteTask"; payload: string }

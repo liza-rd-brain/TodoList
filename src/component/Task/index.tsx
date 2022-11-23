@@ -101,11 +101,19 @@ export const Task = () => {
     refContainer.current.fileList = [];
 
     const newPayload = Object.assign(payloadCore, payloadWithFile);
+    const currTaskId = state.currTask?.id as string;
 
-    dispatch({
-      type: "startedSaveTask",
-      payload: newPayload,
-    });
+    if (state.phase.type === "cardCreating") {
+      dispatch({
+        type: "startedSaveTask",
+        payload: newPayload,
+      });
+    } else if (state.phase.type === "cardEditing") {
+      dispatch({
+        type: "startedEditTask",
+        payload: { taskItem: newPayload, id: currTaskId },
+      });
+    }
   };
 
   const deleteTask = () => {

@@ -109,7 +109,7 @@ export const reducer = (
 
     case "cardEditing": {
       switch (action.type) {
-        case "startedSaveTask": {
+        case "startedEditTask": {
           //сохраняем задачу, если закончилась загрузка файлов
           if (!state.doEffect?.type) {
             const newState: State = {
