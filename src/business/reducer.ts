@@ -201,7 +201,11 @@ export const reducer = (
         }
 
         case "changeView": {
-          return changeView(state);
+          if (!state.doEffect?.type) {
+            return changeView(state);
+          } else {
+            return state;
+          }
         }
 
         default: {
@@ -252,7 +256,11 @@ export const reducer = (
         }
 
         case "changeView": {
-          return changeView(state);
+          if (!state.doEffect?.type) {
+            return changeView(state);
+          } else {
+            return state;
+          }
         }
 
         case "startedDeleteTask": {
