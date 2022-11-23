@@ -51,8 +51,6 @@ export function useFireBase() {
           //TODO: поправить тип хранить  в бд без отметки
           const listWithMark = addExpire(todoList);
 
-          console.log(listWithMark);
-
           dispatch({ type: "loadedTaskList", payload: listWithMark });
         });
         break;
@@ -97,14 +95,9 @@ export function useFireBase() {
 
             result.then(
               (res: FileItemList) => {
-                console.log("before res", refContainer);
-                console.log("currFileList", currFileList);
-
                 refContainer.current.fileList = refContainer.current.fileList
                   ? [...refContainer.current.fileList, ...res, ...currFileList]
                   : res;
-
-                console.log("after res", refContainer);
 
                 dispatch({
                   type: "endedAddFile",
@@ -122,8 +115,6 @@ export function useFireBase() {
       }
 
       case "!saveTask": {
-        console.log("saveTask", doEffect.data);
-
         try {
           addDoc(collection(db, "todo"), {
             ...doEffect.data,
@@ -138,11 +129,10 @@ export function useFireBase() {
       }
 
       case "!updateTask": {
-        console.log("updateTask", doEffect.data);
-        const currId = currTask?.id as string;
-        const taskDocRef = doc(db, "todo", currId);
+        // const currId = currTask?.id as string;
+        const taskDocRef = doc(db, "todo", doEffect.data.id);
         try {
-          updateDoc(taskDocRef, doEffect.data);
+          updateDoc(taskDocRef, doEffect.data.taskItem);
         } catch (err) {
           console.log(err);
         }

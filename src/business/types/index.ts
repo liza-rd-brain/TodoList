@@ -44,34 +44,36 @@ export type EffectType =
   | { type: "!loadFireBase" }
   | { type: "!loadFile"; data: FileList }
   | { type: "!saveTask"; data: DataValueType }
-  | { type: "!updateTask"; data: DataValueType }
+  | { type: "!updateTask"; data: { taskItem: DataValueType; id: string } }
   | { type: "!deleteTask"; data: string }
   | null;
 
 export type PhaseType =
   | { type: "waitingTaskList" }
+  | { type: "updatingTaskList" }
   | { type: "cardCreating" }
   | { type: "cardEditing" }
-  // | { type: "fileAdding" }
-  | { type: "idle" };
+  | { type: "doneEditing.cardEditing" }
+  | { type: "doneEditing.previewCard" }
+  | { type: "previewCard" };
+
+export const PhaseInner = ["cardEditing", "previewCard"] as const;
+
+export type PhaseInnerType = typeof PhaseInner[number];
 
 export type ActionType =
   | { type: "loadedTaskList"; payload: DataTypeList }
   | { type: "startedAddFile"; payload: FileList | null | undefined }
-  | { type: "endedAddFile" /* ; payload: FileItemList */ }
+  | { type: "endedAddFile" }
   | { type: "startedSaveTask"; payload: DataValueType }
   | { type: "endedSaveTask" }
   | { type: "openedTask"; payload: string }
   | { type: "startedDeleteTask"; payload: string }
   | { type: "endedDeleteTask" }
-  | { type: "saveTask" }
-  | { type: "checkDone" }
   | { type: "changeView" }
-  | { type: "updateExpired"; payload: DataTypeList };
-
-// export type TodoItemType = {
-//   id: string;
-//   value: DocumentData;
-// };
-
-// export type TodoItemList = Array<TodoItemType>;
+  | { type: "updateExpired"; payload: DataTypeList }
+  | {
+      type: "startedChangeDone";
+      payload: { taskItem: DataValueType; id: string };
+    }
+  | { type: "endedChangeDone" };

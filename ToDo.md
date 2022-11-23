@@ -29,6 +29,8 @@
 # other
 - [ ]separate preloader for file loading
 - [ ] min time and date
+- [ ] currTask->curraskId
+
 
 
 

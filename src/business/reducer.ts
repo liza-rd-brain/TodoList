@@ -1,5 +1,5 @@
 import { useAppContext } from "../AppProvider";
-import { ActionType, DataType, State } from "./types";
+import { ActionType, DataType, PhaseInnerType, State } from "./types";
 
 export const initialState: State = {
   data: null,
@@ -21,7 +21,7 @@ const changeView = (state: State): State => {
     const newState: State = {
       ...state,
       view: "list",
-      phase: { type: "idle" },
+      phase: { type: "previewCard" },
       currTask: null,
     };
     return newState;
@@ -32,10 +32,11 @@ export const reducer = (
   state: State = initialState,
   action: ActionType
 ): State => {
-  const phase = state.phase.type;
+  const [phaseOuter, phaseInner] = state.phase.type.split(".");
+  // const phase = state.phase.type;
 
-  switch (phase) {
-    case "idle": {
+  switch (phaseOuter) {
+    case "previewCard": {
       switch (action.type) {
         case "changeView": {
           return changeView(state);
@@ -64,6 +65,45 @@ export const reducer = (
 
           return newState;
         }
+
+        case "startedDeleteTask": {
+          const newState: State = {
+            ...state,
+            doEffect: { type: "!deleteTask", data: action.payload },
+          };
+
+          return newState;
+        }
+
+        case "endedDeleteTask": {
+          const newState: State = {
+            ...state,
+            view: "loading",
+            doEffect: { type: "!loadFireBase" },
+            phase: { type: "waitingTaskList" },
+            currTask: null,
+          };
+          return newState;
+        }
+
+        case "startedChangeDone": {
+          debugger;
+          if (!state.doEffect?.type) {
+            const newState: State = {
+              ...state,
+              doEffect: { type: "!updateTask", data: action.payload },
+              phase: { type: "doneEditing.previewCard" },
+            };
+
+            return newState;
+          } else {
+            return state;
+          }
+        }
+
+        default: {
+          return state;
+        }
       }
     }
 
@@ -91,11 +131,11 @@ export const reducer = (
           };
           return newState;
         }
+
         case "startedAddFile": {
           const newState: State = {
             ...state,
             doEffect: { type: "!loadFile", data: action.payload as FileList },
-            // phase: { type: "fileAdding" },
           };
           return newState;
         }
@@ -136,6 +176,27 @@ export const reducer = (
           };
 
           return newState;
+        }
+
+        case "startedChangeDone": {
+          debugger;
+          if (!state.doEffect?.type) {
+            const newState: State = {
+              ...state,
+              doEffect: { type: "!updateTask", data: action.payload },
+              phase: { type: "doneEditing.cardEditing" },
+            };
+
+            return newState;
+          }
+        }
+
+        case "changeView": {
+          return changeView(state);
+        }
+
+        default: {
+          return state;
         }
       }
     }
@@ -196,33 +257,24 @@ export const reducer = (
 
           return newState;
         }
-      }
-    }
 
-    /*   case "fileAdding": {
-      switch (action.type) {
-        case "endedAddFile": {
-          const newState: State = {
-            ...state,
-            doEffect: null,
+        // case "startedChangeDone": {
+        //   if (!state.doEffect?.type) {
+        //     const newState: State = {
+        //       ...state,
+        //       doEffect: { type: "!updateTask", data: action.payload },
+        //       phase: { type: "doneEditing.cardCreating" },
+        //     };
 
-            // currTask: {
-            //   ...state.currTask,
-            //   value: {
-            //     ...state.currTask?.value,
-            //     name: state.currTask?.value.name || "",
-            //     desc: state.currTask?.value.desc || "",
-            //     fileList: action.payload,
-            //     isDone: false,
-            //     endDate: null,
-            //   },
-            // },
-          };
+        //     return newState;
+        //   }
+        // }
 
-          return newState;
+        default: {
+          return state;
         }
       }
-    } */
+    }
 
     case "waitingTaskList": {
       switch (action.type) {
@@ -231,7 +283,86 @@ export const reducer = (
             ...state,
             data: action.payload,
             view: "list",
-            phase: { type: "idle" },
+            phase: { type: "previewCard" },
+            doEffect: null,
+          };
+
+          return newState;
+        }
+
+        default:
+          return state;
+      }
+    }
+
+    case "doneEditing": {
+      switch (action.type) {
+        case "endedSaveTask": {
+          const newState: State = {
+            ...state,
+            doEffect: { type: "!loadFireBase" },
+          };
+          return newState;
+        }
+
+        case "loadedTaskList": {
+          console.log("мы сейчас в ", state.phase);
+          const newPhase = phaseInner as PhaseInnerType;
+          debugger;
+          switch (newPhase) {
+            case "cardEditing": {
+              const newCurrTask = action.payload.find((item) => {
+                return item.id === state.currTask?.id;
+              });
+
+              console.log("newCurrTask", newCurrTask);
+
+              const newState: State = {
+                ...state,
+                data: action.payload,
+                view: "card",
+                phase: { type: newPhase },
+                doEffect: null,
+                currTask: newCurrTask || null,
+              };
+
+              return newState;
+            }
+            case "previewCard": {
+              const newState: State = {
+                ...state,
+                data: action.payload,
+                view: "list",
+                phase: { type: newPhase },
+                doEffect: null,
+              };
+
+              return newState;
+            }
+            default: {
+              return state;
+            }
+          }
+        }
+
+        case "changeView": {
+          return changeView(state);
+        }
+
+        default: {
+          return state;
+        }
+      }
+    }
+
+    case "updatingTaskList": {
+      switch (action.type) {
+        case "loadedTaskList": {
+          const newState: State = {
+            ...state,
+            data: action.payload,
+            // view: "list",
+            // phase: { type: "previewCard" },
             doEffect: null,
           };
 

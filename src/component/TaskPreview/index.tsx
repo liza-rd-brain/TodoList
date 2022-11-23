@@ -23,10 +23,30 @@ export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
     });
   };
 
+  const makeTaskDone = (e) => {
+    e.stopPropagation();
+    const doneTask: DataValueType = {
+      ...item.value,
+      isDone: !item.value.isDone,
+    };
+
+    console.log("startedChangeDone", doneTask);
+
+    dispatch({
+      type: "startedChangeDone",
+      payload: { taskItem: doneTask, id: item.id },
+    });
+  };
+
   return (
     <div className="preview-container" onClick={openTask}>
       <div className="left-panel">
-        <input type="checkbox" />
+        <input
+          type="checkbox"
+          checked={item.value.isDone}
+          onChange={makeTaskDone}
+          onClick={(e) => e.stopPropagation()}
+        />
       </div>
       <div className="right-panel">
         <div>

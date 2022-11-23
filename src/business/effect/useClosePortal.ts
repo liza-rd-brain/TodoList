@@ -15,6 +15,7 @@ export function useClosePortal() {
     if (!withinBoundaries) {
       //очищаем хранилище при закрытии окна задачи
       refContainer.current.fileList = [];
+
       dispatch({ type: "changeView" });
     }
   };

@@ -21,9 +21,6 @@ export const Task = () => {
     ? refContainer.current.fileList
     : state.currTask?.value.fileList;
 
-  console.log("currFileList", currFileList);
-  console.log("refContainer", refContainer.current.fileList);
-
   const getFileList = () => {
     if (currFileList) {
       return currFileList.map((fileItem, index) => {
@@ -41,8 +38,6 @@ export const Task = () => {
   const textInput = useRef<HTMLInputElement>(null);
   const textArea = useRef<HTMLTextAreaElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
-
-  console.log("что лежит в файлах", fileInput.current);
 
   const minData = dayjs().format("YYYY-MM-DD");
 
@@ -66,7 +61,6 @@ export const Task = () => {
     });
   };
 
-  //TODO: очищаем реф
   const closeModal = () => {
     //очищаем хранилище
     refContainer.current.fileList = [];
@@ -75,9 +69,6 @@ export const Task = () => {
 
   //добавляем в реф
   const addFiles = () => {
-    console.log("перед добавкой", refContainer.current.fileList);
-    console.log("добавили мы", fileInput.current?.files);
-
     dispatch({
       type: "startedAddFile",
       payload: fileInput.current?.files as FileList,
@@ -87,8 +78,6 @@ export const Task = () => {
   const dataExpired = dateState.date
     ? checkIsExpired(dateState as { date: string; time?: string })
     : state.currTask?.isExpired;
-
-  // console.log("dataExpired", dataExpired);
 
   const saveTask = (e: FormEvent) => {
     e.preventDefault();
@@ -103,23 +92,15 @@ export const Task = () => {
       },
     };
 
-    console.log("payloadCore", payloadCore);
-
     //копируем чтобы не потерять значения из контейнера
     const payloadWithFile = {
       fileList: currFileList?.length ? currFileList : [],
     };
 
-    console.log("payloadWithFile", currFileList);
-
     // очищаем хранилище
     refContainer.current.fileList = [];
 
-    console.log("payloadWithFile", payloadWithFile);
-
     const newPayload = Object.assign(payloadCore, payloadWithFile);
-
-    console.log("newPayload", newPayload);
 
     dispatch({
       type: "startedSaveTask",
@@ -135,14 +116,19 @@ export const Task = () => {
     });
   };
 
-  const makeTaskDone = () => {
+  const makeTaskDone = (e) => {
+    e.stopPropagation();
     const doneTask: DataValueType = {
       ...(state.currTask?.value as DataValueType),
-      isDone: true,
+      isDone: !state.currTask?.value.isDone,
     };
+    const currTaskId = state.currTask?.id as string;
+
+    console.log("startedChangeDone", !state.currTask?.value.isDone);
+
     dispatch({
-      type: "startedSaveTask",
-      payload: doneTask,
+      type: "startedChangeDone",
+      payload: { taskItem: doneTask, id: currTaskId },
     });
   };
 
@@ -150,8 +136,16 @@ export const Task = () => {
     <div className="task-container" id="taskContainer">
       <div className="header-panel">
         <div>
-          <input type="checkbox" onClick={makeTaskDone} />
-          <span>завершить задачу</span>
+          {state.phase.type === "cardEditing" && (
+            <>
+              <input
+                type="checkbox"
+                checked={state.currTask?.value?.isDone}
+                onChange={makeTaskDone}
+              />
+              <span>завершить задачу</span>
+            </>
+          )}
         </div>
 
         <button onClick={closeModal}>x</button>
