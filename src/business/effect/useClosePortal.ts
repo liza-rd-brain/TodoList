@@ -8,7 +8,6 @@ export function useClosePortal() {
   const {
     state: { view },
     dispatch,
-    refContainer,
   } = useAppContext();
 
   const closeModal = (e: MouseEvent) => {
@@ -17,7 +16,6 @@ export function useClosePortal() {
     const withinBoundaries = e.composedPath().includes(container);
     if (!withinBoundaries) {
       //clean up ref store when portal closed
-      refContainer.current.fileList = [];
       dispatch({ type: "changeView" });
     }
   };
