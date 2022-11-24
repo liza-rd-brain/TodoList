@@ -45,12 +45,6 @@ export function useFireBase() {
           dispatch({ type: "loadedTaskList", payload: listWithMark });
         });
         break;
-
-        /* Нужна ли отписка и контроль за обновлением-?! */
-        // return () => {
-        //   console.log("отписка");
-        //   unsubscribe();
-        // };
       }
 
       case "!saveTask": {

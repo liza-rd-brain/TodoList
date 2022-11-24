@@ -21,7 +21,7 @@ const DESC_TASK_TEXT = "описание";
 const DATE_TASK_TEXT = "дата завершения";
 const FILE_TASK_TEXT = "прикрепленные файлы";
 
-const ADD_FILE_TASK = "выберите файл";
+const ADD_FILE_TASK = "выбрать файлы";
 const TASK_DONE_TEXT = "завершить задачу";
 
 const DELETE_BUTTON_TEXT = "удалить";
@@ -219,7 +219,7 @@ export const Task = () => {
           )}
         </div>
 
-        <button onClick={closeModal}>x</button>
+        <button onClick={closeModal}>X</button>
       </div>
       <form onSubmit={saveTask}>
         <div className="task-content">
@@ -295,10 +295,10 @@ export const Task = () => {
           </div>
         </div>
         <div className="bottom-panel">
-          <button className="control-button button-delete" onClick={deleteTask}>
+          <button className="delete" onClick={deleteTask}>
             {DELETE_BUTTON_TEXT}
           </button>
-          <button type="submit" className="control-button button-save">
+          <button type="submit" className="save">
             {SAVE_BUTTON_TEXT}
           </button>
         </div>

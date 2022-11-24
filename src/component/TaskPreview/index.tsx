@@ -5,6 +5,9 @@ import { DataType, DataValueType } from "../../business/types";
 
 import "./index.less";
 
+const DELETE_BTN_TEXT = "удалить";
+const EXPIRED_TEXT = "просрочена";
+
 export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
   const { dispatch } = useAppContext();
 
@@ -75,10 +78,10 @@ export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
                 <span>{item.value.endDate.time}</span>
               </>
             )}
-            {taskExpired && <span className="date-mark">просрочена</span>}
+            {taskExpired && <span className="date-mark">{EXPIRED_TEXT}</span>}
           </div>
 
-          <button onClick={(e) => deleteTask(e)}>delete</button>
+          <button onClick={(e) => deleteTask(e)}>{DELETE_BTN_TEXT}</button>
         </div>
       </div>
     </div>

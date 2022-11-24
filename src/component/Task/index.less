@@ -1,3 +1,5 @@
+@import "../../App.less";
+
 .task-container {
     position: absolute;
     // top: 10vh;
@@ -8,16 +10,23 @@
     background-color: white;
     padding: 10px;
     box-sizing: border-box;
-    gap: 15px
+    gap: 15px;
+    border-radius: @bid-border-radius;
 }
 
 .header-panel {
     display: flex;
     justify-content: space-between;
-    padding: 20px 30px;
-    &>*{
+    align-items: center;
+    padding: 10px 30px;
+
+    &>* {
         display: flex;
-        gap:15px
+        gap: 15px
+    }
+
+    &>button {
+        .button(@light-gray);
     }
 }
 
@@ -25,6 +34,18 @@
     display: flex;
     justify-content: end;
     padding: 10px;
+
+
+    &>.save {
+
+        .button(@green)
+    }
+
+    &>.delete {
+
+        .button(@faint-red)
+    }
+
 }
 
 .task-content {
@@ -72,60 +93,28 @@
 
 }
 
-.control-button {
-    height: 40px;
-    width: 80px;
-}
+// .control-button {
+//     height: 40px;
+//     width: 80px;
+// }
 
 .bottom-panel {
     gap: 15px
 }
 
-.button-delete {}
+// .button-delete {}
 
-.button-save {}
+// .button-save {}
 
 .input-file {
     position: relative;
     display: flex;
     justify-content: center;
-
-    &:hover span {
-        background-color: rgb(202, 200, 200);
-    }
-
-    &:active span,
-    &:focus span {
-        background-color: rgb(157, 155, 155);
-        // background-color: rgb(157, 155, 155);
-    }
-
+    .button(@light-gray);
 
 }
 
-.input-file span {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    outline: none;
-    text-decoration: none;
-    font-size: 14px;
 
-    border-radius: 4px;
-    background-color: rgb(240 240 240);
-    line-height: 22px;
-    height: 40px;
-    padding: 10px 20px;
-    box-sizing: border-box;
-    border: none;
-    margin: 0;
-    transition: background-color 0.2s;
-    min-width: 140px;
-
-
-}
 
 .input-file input[type=file] {
     position: absolute;
@@ -136,10 +125,6 @@
     height: 0;
 }
 
-/* Disabled */
-.input-file input[type=file]:disabled+span {
-    background-color: #eee;
-}
 
 .fileList {
     display: flex;
