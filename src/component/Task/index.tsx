@@ -123,8 +123,8 @@ export const Task = () => {
       desc: textArea.current?.value as string,
       isDone: checkDone.current?.checked || false,
       endDate: {
-        date: dateState.date || "",
-        time: dateState.time || "",
+        date: currTask?.value.endDate.date || dateState.date || "",
+        time: currTask?.value.endDate.time || dateState.time || "",
       },
     };
 
