@@ -47,3 +47,8 @@ Open http://localhost:1234 to view it in the browser.
 - постараться не использовать никаких библиотек, кроме необходимых для общения с Back-end.
 
 Не требуется делать супер-красивый UI и функции не описанные в задании.
+
+## Planned fix:
+- [ ] clean up less style
+- [ ] err on data updating with fire store
+
