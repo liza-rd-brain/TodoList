@@ -2,7 +2,9 @@
 
 .task-container {
     position: absolute;
-    // top: 10vh;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     width: 700px;
     min-height: 500px;
     z-index: 6;
@@ -10,8 +12,9 @@
     background-color: white;
     padding: 10px;
     box-sizing: border-box;
-    gap: 15px;
-    border-radius: @bid-border-radius;
+    & * {
+        @font()
+      }
 }
 
 .header-panel {
@@ -105,25 +108,17 @@
 
 }
 
-// .control-button {
-//     height: 40px;
-//     width: 80px;
-// }
-
 .bottom-panel {
     gap: 15px
 }
-
-// .button-delete {}
-
-// .button-save {}
 
 .input-file {
     position: relative;
     display: flex;
     justify-content: center;
     .button(@light-gray);
-
+    min-width: 40px;
+  
 }
 
 
@@ -136,7 +131,6 @@
     width: 0;
     height: 0;
 }
-
 
 .fileList {
     display: flex;

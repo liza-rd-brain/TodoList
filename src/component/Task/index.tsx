@@ -9,7 +9,7 @@ import React, {
 
 import { Preloader } from "../Preloader";
 import { useAppContext } from "../../AppProvider";
-import { DataType, DataValueType, FileItemList } from "../../business/types";
+import { DataValueType, FileItemList } from "../../business/types";
 import { checkIsExpired } from "../../business/helpers/checkIsExpired";
 
 import "./index.less";

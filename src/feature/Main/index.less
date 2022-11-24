@@ -7,13 +7,10 @@
 }
 
 .app-container {
-  // width: 900px;
   width: 100%;
   margin: auto;
-  /*  margin: 200px auto auto; */
   display: flex;
   justify-content: center;
-  /*   align-items: center; */
   height: 100vh;
   position: relative;
 
@@ -25,7 +22,7 @@
 
 .app-logo {
   height: 20px;
-  @font();
+
 }
 
 .app-logo {
@@ -35,18 +32,14 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  // color: @dark-gray;
   font-weight: 400;
 }
 
-.app-text {}
 
 .app-button {
-  // width: 500px;
   height: 50px;
   font-size: 20px;
   .button(@light-gray);
-  /*   border-radius: 5px; */
 }
 
 .todo-list {
@@ -58,6 +51,9 @@
   margin: 5vh auto auto;
   background-color: #d3d3d34d;
   border-radius: @bid-border-radius;
+  & * {
+    @font()
+  }
 
 }
 
