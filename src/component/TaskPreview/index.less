@@ -29,24 +29,31 @@
 
     & .left-panel {
         height: 100%;
-        padding:20px 20px 0 20px ;
-        border-radius:  @bid-border-radius  0 0@bid-border-radius ;
+        padding: 20px 20px 0 20px;
+        border-radius: @bid-border-radius 0 0@bid-border-radius ;
         box-sizing: border-box;
-       
+
     }
 
-    & .expired-task{
+    & .expired-task {
         background: @faint-red;
-      
+
     }
-    & .done-task{
+
+    & .done-task {
         background: @green;
-      
+
     }
 
     & .right-panel {
+        width: 80%;
         margin: 10px;
 
+        &>:first-child {
+            display: flex;
+            flex-direction: column;
+            gap: 10px
+        }
     }
 
 }
