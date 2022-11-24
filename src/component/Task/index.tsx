@@ -22,7 +22,8 @@ const DATE_TASK_TEXT = "дата завершения";
 const FILE_TASK_TEXT = "прикрепленные файлы";
 
 const ADD_FILE_TASK = "выбрать файлы";
-const TASK_DONE_TEXT = "завершить задачу";
+const TASK_CURRENT_TEXT = "завершить задачу";
+const TASK_DONE_TEXT = "задача завершена";
 
 const DELETE_BUTTON_TEXT = "удалить";
 const SAVE_BUTTON_TEXT = "сохранить";
@@ -67,6 +68,7 @@ export const Task = () => {
 
   const textInput = useRef<HTMLInputElement>(null);
   const textArea = useRef<HTMLTextAreaElement>(null);
+  const checkDone = useRef<HTMLInputElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
   type DateStateType = {
@@ -114,12 +116,14 @@ export const Task = () => {
    * emit dispatch that started save task
    */
   const saveTask = (e: FormEvent) => {
+    console.log("fired save task");
     e.preventDefault();
 
+    console.log("checked", checkDone.current?.checked);
     const payloadCore = {
       name: textInput.current?.value as string,
       desc: textArea.current?.value as string,
-      isDone: false,
+      isDone: checkDone.current?.checked || false,
       endDate: {
         date: dateState.date || "",
         time: dateState.time || "",
@@ -194,6 +198,9 @@ export const Task = () => {
    */
   const taskExpired = dataExpired && !currTask?.value.isDone;
 
+  const taskExpiredClass = taskExpired && "expired-task";
+  const taskDoneClass = currTask?.value.isDone && "done-task";
+
   useLoadFile(currRefContainer);
 
   useEffect(() => {
@@ -205,16 +212,19 @@ export const Task = () => {
 
   return (
     <div className="task-container" id="taskContainer">
-      <div className="header-panel">
+      <div className={`header-panel ${taskExpiredClass} ${taskDoneClass}`}>
         <div>
           {state.phase.type === "cardEditing" && (
             <>
               <input
+                ref={checkDone}
                 type="checkbox"
                 checked={currTask?.value?.isDone}
                 onChange={changeTaskDone}
               />
-              <span>{TASK_DONE_TEXT}</span>
+              <span>
+                {currTask?.value.isDone ? TASK_DONE_TEXT : TASK_CURRENT_TEXT}
+              </span>
             </>
           )}
         </div>

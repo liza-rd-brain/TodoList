@@ -19,6 +19,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 30px;
+    border-radius: @bid-border-radius;
+
 
     &>* {
         display: flex;
@@ -28,6 +30,16 @@
     &>button {
         .button(@light-gray);
     }
+}
+
+& .expired-task {
+    background: @faint-red;
+
+}
+
+& .done-task {
+    background: @green;
+
 }
 
 .bottom-panel {
