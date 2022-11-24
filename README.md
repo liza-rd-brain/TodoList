@@ -50,5 +50,7 @@ Open http://localhost:1234 to view it in the browser.
 
 ## Planned fix:
 - [ ] clean up less style
-- [ ] err on data updating with fire store
+- [ ] err on data updating with fire store ?
+- [ ] err handling
+- [ ] add test (jest)
 
