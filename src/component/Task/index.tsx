@@ -116,10 +116,8 @@ export const Task = () => {
    * emit dispatch that started save task
    */
   const saveTask = (e: FormEvent) => {
-    console.log("fired save task");
     e.preventDefault();
 
-    console.log("checked", checkDone.current?.checked);
     const payloadCore = {
       name: textInput.current?.value as string,
       desc: textArea.current?.value as string,
@@ -205,7 +203,6 @@ export const Task = () => {
 
   useEffect(() => {
     return () => {
-      console.log("clear currRefContainer ");
       currRefContainer.current.fileList = [];
     };
   }, []);

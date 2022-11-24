@@ -23,7 +23,6 @@ const LOGO_TEXT = "TODO";
  */
 export function Main() {
   const { state, dispatch } = useAppContext();
-  console.log(state);
 
   /**
    *
