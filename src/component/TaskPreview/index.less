@@ -5,10 +5,10 @@
     flex-direction: row;
     align-items: start;
     width: 500px;
-    height: 100px;
+    height: 120px;
     background-color: #fffdfd7d;
     border-radius: @bid-border-radius;
-    padding: 15px;
+    // padding: 15px 15px 15px 0;
     cursor: pointer;
     text-align: start;
     gap: 10px;
@@ -26,6 +26,28 @@
     &>:last-child {
         width: 100%;
         gap: 15px
+    }
+
+    & .left-panel {
+        height: 100%;
+        padding:20px 20px 0 20px ;
+        border-radius:  @bid-border-radius  0 0@bid-border-radius ;
+        box-sizing: border-box;
+       
+    }
+
+    & .expired-task{
+        background: @faint-red;
+      
+    }
+    & .done-task{
+        background: @green;
+      
+    }
+
+    & .right-panel {
+        margin: 10px;
+        // box-sizing: border-box;
     }
 
 
@@ -64,8 +86,6 @@
 .preview-date {
     display: flex;
     gap: 10px;
-
-
 
 }
 

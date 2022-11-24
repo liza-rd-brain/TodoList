@@ -37,7 +37,7 @@ export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
   /**
    * emit dispatch that edit done task
    */
-  const changeTaskDone = (e) => {
+  const changeTaskDone = (e: React.FormEvent<HTMLInputElement>) => {
     e.stopPropagation();
     const doneTask: DataValueType = {
       ...item.value,
@@ -54,10 +54,12 @@ export const TaskPreview: FC<{ item: DataType }> = ({ item }) => {
    * task cant be expired if it done
    */
   const taskExpired = item.isExpired && !item.value.isDone;
+  const taskExpiredClass = taskExpired && "expired-task";
+  const taskDoneClass = item.value.isDone && "done-task";
 
   return (
     <div className="preview-container" onClick={openTask}>
-      <div className="left-panel">
+      <div className={`left-panel ${taskExpiredClass} ${taskDoneClass}`}>
         <input
           type="checkbox"
           checked={item.value.isDone}
