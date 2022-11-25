@@ -31,7 +31,7 @@ export function useFireBase() {
       case "!loadFireBase": {
         const currQuery = query(collection(db, path), orderBy("creationDate"));
 
-        const unsubscribe = onSnapshot(currQuery, (querySnapshot) => {
+        onSnapshot(currQuery, (querySnapshot) => {
           const todoList = querySnapshot.docs.map(
             (doc) =>
               ({

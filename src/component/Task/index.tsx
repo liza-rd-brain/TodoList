@@ -1,34 +1,35 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import React, {
   BaseSyntheticEvent,
   FormEvent,
   useEffect,
   useRef,
   useState,
-} from "react";
+} from 'react';
 
-import { Preloader } from "../Preloader";
-import { useAppContext } from "../../AppProvider";
-import { DataValueType, FileItemList } from "../../business/types";
-import { checkIsExpired } from "../../business/helpers/checkIsExpired";
+import { Preloader } from '../Preloader';
+import { useAppContext } from '../../AppProvider';
+import { DataValueType, FileItemList } from '../../business/types';
+import { checkIsExpired } from '../../business/helpers/checkIsExpired';
 
-import "./index.less";
-import { useLoadFile } from "../../business/effect/useLoadFile";
+import './index.less';
+import { useLoadFile } from '../../business/effect/useLoadFile';
 
-const MARK_TEXT = "просрочена";
-const NAME_TASK_TEXT = "заголовок";
-const DESC_TASK_TEXT = "описание";
-const DATE_TASK_TEXT = "дата завершения";
-const FILE_TASK_TEXT = "прикрепленные файлы";
+const MARK_TEXT = 'просрочена';
+const NAME_TASK_TEXT = 'заголовок';
+const DESC_TASK_TEXT = 'описание';
+const DATE_TASK_TEXT = 'дата завершения';
+const FILE_TASK_TEXT = 'прикрепленные файлы';
 
-const ADD_FILE_TASK = "выбрать файлы";
-const TASK_CURRENT_TEXT = "завершить задачу";
-const TASK_DONE_TEXT = "задача завершена";
+const ADD_FILE_TASK = 'выбрать файлы';
+const TASK_CURRENT_TEXT = 'завершить задачу';
+const TASK_DONE_TEXT = 'задача завершена';
 
-const DELETE_BUTTON_TEXT = "удалить";
-const SAVE_BUTTON_TEXT = "сохранить";
+const DELETE_BUTTON_TEXT = 'удалить';
+const SAVE_BUTTON_TEXT = 'сохранить';
 
-const minData = dayjs().format("YYYY-MM-DD");
+const minData = dayjs().format('YYYY-MM-DD');
+const defaultDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
 
 export const Task = () => {
   const { state, dispatch } = useAppContext();
@@ -57,7 +58,7 @@ export const Task = () => {
       return currFileList.map((fileItem, index) => {
         return (
           <div key={index}>
-            <a href={fileItem?.link} target="blank">
+            <a href={fileItem?.link} target='blank'>
               {fileItem?.name}
             </a>
           </div>
@@ -77,8 +78,8 @@ export const Task = () => {
   };
 
   const initState: DateStateType = {
-    date: null,
-    time: null,
+    date: currTask?.value.endDate.date || null,
+    time: currTask?.value.endDate.time || null,
   };
 
   const [dateState, setDataState] = useState(() => {
@@ -88,6 +89,11 @@ export const Task = () => {
   const saveDate = (
     e: React.FormEvent<HTMLInputElement> & BaseSyntheticEvent
   ) => {
+    if (e.target instanceof HTMLInputElement)
+      if (currTask && currTask?.value) {
+        (currTask.value as any)[e.target.type] = e.target.value;
+      }
+
     setDataState((prev) => {
       return { ...prev, [e.target.type]: e.target.value };
     });
@@ -99,7 +105,7 @@ export const Task = () => {
   const closeModal = () => {
     //clean up ref store when portal closed
     currRefContainer.current.fileList = [];
-    dispatch({ type: "changeView" });
+    dispatch({ type: 'changeView' });
   };
 
   /**
@@ -107,7 +113,7 @@ export const Task = () => {
    */
   const addFiles = () => {
     dispatch({
-      type: "startedAddFile",
+      type: 'startedAddFile',
       payload: fileInput.current?.files as FileList,
     });
   };
@@ -123,8 +129,8 @@ export const Task = () => {
       desc: textArea.current?.value as string,
       isDone: checkDone.current?.checked || false,
       endDate: {
-        date: currTask?.value.endDate.date || dateState.date || "",
-        time: currTask?.value.endDate.time || dateState.time || "",
+        date: dateState.date || currTask?.value.endDate.date || '',
+        time: dateState.time || currTask?.value.endDate.time || '',
       },
     };
 
@@ -137,18 +143,18 @@ export const Task = () => {
 
     const newPayload = Object.assign(payloadCore, payloadWithFile);
 
-    if (state.phase.type === "cardCreating") {
+    if (state.phase.type === 'cardCreating') {
       dispatch({
-        type: "startedSaveTask",
+        type: 'startedSaveTask',
         payload: newPayload,
       });
-    } else if (state.phase.type === "cardEditing") {
+    } else if (state.phase.type === 'cardEditing') {
       /**
        * id edit card already have id!
        */
       const currTaskId = state.currTaskId as string;
       dispatch({
-        type: "startedEditTask",
+        type: 'startedEditTask',
         payload: { taskItem: newPayload, id: currTaskId },
       });
     }
@@ -160,7 +166,7 @@ export const Task = () => {
   const deleteTask = () => {
     currRefContainer.current.fileList = [];
     dispatch({
-      type: "startedDeleteTask",
+      type: 'startedDeleteTask',
       payload: state?.currTaskId,
     });
   };
@@ -181,7 +187,7 @@ export const Task = () => {
       const currTaskId = currTask?.id as string;
 
       dispatch({
-        type: "startedChangeDone",
+        type: 'startedChangeDone',
         payload: { taskItem: doneTask, id: currTaskId },
       });
     }
@@ -195,9 +201,8 @@ export const Task = () => {
    * task cant be expired if it done
    */
   const taskExpired = dataExpired && !currTask?.value.isDone;
-
-  const taskExpiredClass = taskExpired && "expired-task";
-  const taskDoneClass = currTask?.value.isDone && "done-task";
+  const taskExpiredClass = taskExpired && 'expired-task';
+  const taskDoneClass = currTask?.value.isDone && 'done-task';
 
   useLoadFile(currRefContainer);
 
@@ -208,14 +213,14 @@ export const Task = () => {
   }, []);
 
   return (
-    <div className="task-container" id="taskContainer">
+    <div className='task-container' id='taskContainer'>
       <div className={`header-panel ${taskExpiredClass} ${taskDoneClass}`}>
         <div>
-          {state.phase.type === "cardEditing" && (
+          {state.phase.type === 'cardEditing' && (
             <>
               <input
                 ref={checkDone}
-                type="checkbox"
+                type='checkbox'
                 checked={currTask?.value?.isDone}
                 onChange={changeTaskDone}
               />
@@ -229,68 +234,74 @@ export const Task = () => {
         <button onClick={closeModal}>X</button>
       </div>
       <form onSubmit={saveTask}>
-        <div className="task-content">
-          <div className="content-row">
-            <div className="task-caption">{NAME_TASK_TEXT}</div>
+        <div className='task-content'>
+          <div className='content-row'>
+            <div className='task-caption'>{NAME_TASK_TEXT}</div>
 
             <input
               required={true}
               ref={textInput}
-              type="text"
-              className="task-textinput"
+              type='text'
+              className='task-textinput'
               defaultValue={currTask?.value?.name}
             />
           </div>
-          <div className="content-row">
-            <div className="task-caption">{DESC_TASK_TEXT}</div>
+          <div className='content-row'>
+            <div className='task-caption'>{DESC_TASK_TEXT}</div>
             <textarea
               ref={textArea}
-              className="task-textarea"
-              name="post"
-              id="input"
+              className='task-textarea'
+              name='post'
+              id='input'
               rows={10}
               cols={40}
               defaultValue={currTask?.value?.desc}
             ></textarea>
           </div>
-          <div className="content-row">
-            <div className="task-caption">
+          <div className='content-row'>
+            <div className='task-caption'>
               {DATE_TASK_TEXT}
-              {taskExpired && <span className="date-mark">{MARK_TEXT}</span>}
+              {taskExpired && <span className='date-mark'>{MARK_TEXT}</span>}
             </div>
 
-            <div className="data-wrapper">
+            <div className='data-wrapper'>
               {/* TODO: можно добавить минимальную дату и время */}
               <input
-                type="date"
-                defaultValue={currTask?.value?.endDate?.date}
+                type='date'
+                defaultValue={
+                  dateState.date ||
+                  currTask?.value?.endDate?.date ||
+                  defaultDate
+                }
                 required={Boolean(dateState.time)}
                 min={minData}
                 onChange={saveDate}
               />
               <input
-                type="time"
-                defaultValue={currTask?.value?.endDate?.time || undefined}
+                type='time'
+                defaultValue={
+                  dateState.time || currTask?.value?.endDate?.time || undefined
+                }
                 onChange={saveDate}
               ></input>
             </div>
           </div>
 
-          <div className="content-row">
-            <div className="caption-wrap">
-              <div className="task-caption">{FILE_TASK_TEXT}</div>
-              <label className="input-file">
+          <div className='content-row'>
+            <div className='caption-wrap'>
+              <div className='task-caption'>{FILE_TASK_TEXT}</div>
+              <label className='input-file'>
                 <input
                   ref={fileInput}
-                  type="file"
+                  type='file'
                   multiple
                   onChange={addFiles}
-                  className="input-file"
+                  className='input-file'
                 />
 
                 <span>
-                  {state.doEffect?.type === "!loadFile" ? (
-                    <Preloader type="small" />
+                  {state.doEffect?.type === '!loadFile' ? (
+                    <Preloader type='small' />
                   ) : (
                     ADD_FILE_TASK
                   )}
@@ -298,14 +309,14 @@ export const Task = () => {
               </label>
             </div>
 
-            <div className="fileList">{getFileList()}</div>
+            <div className='fileList'>{getFileList()}</div>
           </div>
         </div>
-        <div className="bottom-panel">
-          <button className="delete" onClick={deleteTask}>
+        <div className='bottom-panel'>
+          <button className='delete' onClick={deleteTask}>
             {DELETE_BUTTON_TEXT}
           </button>
-          <button type="submit" className="save">
+          <button type='submit' className='save'>
             {SAVE_BUTTON_TEXT}
           </button>
         </div>
